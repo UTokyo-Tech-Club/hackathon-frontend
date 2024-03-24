@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import EditorJS, { EditorConfig, BlockToolConstructable } from '@editorjs/editorjs';
+import { v4 as uuidv4 } from 'uuid';
 import log from 'loglevel';
 //@ts-ignore
 import Header from "@editorjs/header";
@@ -69,12 +70,14 @@ interface Data {
 const Content: React.FC<{data: Data}> = ({ data }) => {
     const ejInstance = useRef<EditorJS | null>(null);
 
+    const uid = uuidv4();
+
     useEffect(() => {
         if (!ejInstance.current) {
             // Define the editor configuration with the correct type
             const editorConfig: EditorConfig = {
                 readOnly: true,
-                holder: 'editorjs',
+                holder: uid,
                 tools: {
                     header: {
                         class: Header as unknown as BlockToolConstructable,
@@ -159,7 +162,7 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
         // };
     }, []);
 
-    return <div id="editorjs"></div>;
+    return <div id={uid}></div>;
 };
 
 export default Content
