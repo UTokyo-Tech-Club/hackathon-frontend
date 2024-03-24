@@ -31,11 +31,11 @@ const DEFAULT_INITIAL_DATA = {
 
 const Tweet: React.FC<{tweet: TweetInterface;}> = ({ tweet }) => {
     return (
-        <div className='wrapper'>
+        <div className='tweet'>
             <div className='profile'>
-                <FontAwesomeIcon className='profile-image' icon={faUser} />
-                <p className='profile-name'>Profile</p>
-                <button className='bookmark-button'>
+                <FontAwesomeIcon className='icon' icon={faUser} />
+                <p>Profile</p>
+                <button className='bookmark'>
                     <FontAwesomeIcon icon={faBookmark} />
                 </button>
             </div>
@@ -44,25 +44,25 @@ const Tweet: React.FC<{tweet: TweetInterface;}> = ({ tweet }) => {
                 <Content data={DEFAULT_INITIAL_DATA}/>
             </div>
 
-            <div className='metadata'>
-                <button className='metadata-button'>
-                    <FontAwesomeIcon className='metadata-icon' icon={faComment} />
-                    <p className='metadata-counter'>4</p>
+            <div className='meta'>
+                <button>
+                    <FontAwesomeIcon className='icon' icon={faComment} />
+                    <p>4</p>
                 </button>
 
-                <button className='metadata-button'>
-                    <FontAwesomeIcon className='metadata-icon' icon={faHeart} />
-                    <p className='metadata-counter'>4</p>
+                <button>
+                    <FontAwesomeIcon className='icon' icon={faHeart} />
+                    <p>4</p>
                 </button>
 
-                <button className='metadata-button'>
-                    <FontAwesomeIcon className='metadata-icon' icon={faArrowRightArrowLeft} />
-                    <p className='metadata-counter'>4</p>
+                <button>
+                    <FontAwesomeIcon className='icon' icon={faArrowRightArrowLeft} />
+                    <p>4</p>
                 </button>
 
-                <button className='metadata-button'>
-                    <FontAwesomeIcon className='metadata-icon' icon={faEye} />
-                    <p className='metadata-counter'>4</p>
+                <button>
+                    <FontAwesomeIcon className='icon' icon={faEye} />
+                    <p>4</p>
                 </button>
             </div>
 

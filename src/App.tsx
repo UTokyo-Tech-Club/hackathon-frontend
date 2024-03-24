@@ -46,9 +46,10 @@ function App() {
   }, []);
 
   return (
-    <>
+    <div className='app'>
+      <NavBar />
       <Feed />
-    </>
+    </div>
   )
 }
 

@@ -132,14 +132,8 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
                 onChange: async () => {
                     if (ejInstance.current) {
 
-                        // if (!ejInstance.current.blocks.getBlocksCount()) {
-                        //     log.info('No blocks found');
-                        //     ejInstance.current.blocks.insert("paragraph", {text: ""}, {config: {placeholder: "Write..."}});
-                        //     return
-                        // }
-
-                        let saved = await ejInstance.current.save();
-                        log.info(saved['blocks']);
+                        // let saved = await ejInstance.current.save();
+                        // log.info(saved['blocks']);
                         return
                     }
                     log.error('Editor.js instance is not available')
@@ -162,7 +156,7 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
         // };
     }, []);
 
-    return <div id={uid}></div>;
+    return <div className='content-field' id={uid}></div>;
 };
 
 export default Content

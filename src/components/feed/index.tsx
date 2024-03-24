@@ -38,19 +38,19 @@ const Feed = () => {
         }
 
         return () => {
-        if (loaderRef.current) {
-            observer.unobserve(loaderRef.current);
-        }
+            if (loaderRef.current) {
+                observer.unobserve(loaderRef.current);
+            }
         };
     }, []);
 
     return (
-        <>
+        <div className="feed">
             {tweets.map((item, index) => (
                 <Tweet key={index} tweet={item} />
             ))}
             <div ref={loaderRef}>Loading more...</div>
-        </>
+        </div>
     );
 }
 
