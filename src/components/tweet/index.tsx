@@ -1,6 +1,7 @@
 import React from 'react';
 import TweetInterface from "../../interfaces/Tweet";
 import './index.css';
+import Content from './Content';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
@@ -10,12 +11,25 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRightArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 
+const DEFAULT_INITIAL_DATA = {
+    time: new Date().getTime(),
+    blocks: [
+        {
+            type: "header",
+            data: {
+                text: "Header...",
+            },
+        },
+        {
+            type: "paragraph",
+            data: {
+                text: "text...",
+            },
+        },
+    ],
+};
 
-interface Props {
-    tweet: TweetInterface;
-}
-
-const Tweet: React.FC<Props> = ({ tweet }) => {
+const Tweet: React.FC<{tweet: TweetInterface;}> = ({ tweet }) => {
     return (
         <div className='wrapper'>
             <div className='profile'>
@@ -27,7 +41,7 @@ const Tweet: React.FC<Props> = ({ tweet }) => {
             </div>
 
             <div className='content'>
-                <p>{tweet.content}</p>
+                <Content data={DEFAULT_INITIAL_DATA}/>
             </div>
 
             <div className='metadata'>
