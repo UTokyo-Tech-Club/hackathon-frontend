@@ -17,8 +17,6 @@ const Feed = () => {
         numbLikes: 0
     };
 
-    
-
     const fetchMoreData = () => {
         addTweet(newTweet);
         log.info(tweets.length)
@@ -47,12 +45,12 @@ const Feed = () => {
     }, []);
 
     return (
-        <div>
-        {tweets.map((item, index) => (
-            <Tweet key={index} tweet={item} />
-        ))}
-        <div ref={loaderRef}>Loading more...</div>
-        </div>
+        <>
+            {tweets.map((item, index) => (
+                <Tweet key={index} tweet={item} />
+            ))}
+            <div ref={loaderRef}>Loading more...</div>
+        </>
     );
 }
 
