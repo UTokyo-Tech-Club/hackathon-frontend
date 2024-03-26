@@ -1,17 +1,25 @@
 import { create } from 'zustand';
 
-type DisplayType = "feed" | "tweet" | "newTweet";
+type ContentType = "feed" | "tweet" | "newTweet";
 
 type AppStore = {
-    currentDisplay: DisplayType;
+    currentContent: ContentType;
+    isNewTweetOpen: boolean;
     
-    setDisplay: (display: DisplayType) => void;
+    setContent: (content: ContentType) => void;
+
+    openNewTweet: () => void;
+    closeNewTweet: () => void;
 }
 
 const UseAppStore = create<AppStore>((set) => ({
-    currentDisplay: "feed",
+    currentContent: "feed",
+    isNewTweetOpen: false,
 
-    setDisplay: (display) => set({ currentDisplay: display }),
+    setContent: (content) => set({ currentContent: content }),
+
+    openNewTweet: () => set({ isNewTweetOpen: true }),
+    closeNewTweet: () => set({ isNewTweetOpen: false }),
 }));
 
 export default UseAppStore;

@@ -8,13 +8,20 @@ import Feed from './components/feed';
 import NavBar from './components/navbar';
 import UseAppStore from './stores/App';
 import Copyright from './components/decorations/copyright';
+import Post from './components/post';
 
 // MUI
 import Container from '@mui/material/Container';
+import Fab from '@mui/material/Fab';
+import EditIcon from '@mui/icons-material/Edit';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import { height } from '@fortawesome/free-solid-svg-icons/fa0';
+import Popup from 'reactjs-popup';
 
 export default function App() {
 
-  const { currentDisplay, setDisplay } = UseAppStore();
+  const { currentContent, setContent, openNewTweet} = UseAppStore();
 
   const WS_URL = 'ws://localhost:8080/ws';
 
@@ -51,12 +58,26 @@ export default function App() {
   }, []);
 
   return (
-    <Container maxWidth="sm">
-      {/* <NavBar />
-      <Copyright /> */}
+    <div className='wrapper'>
 
-      { currentDisplay === 'feed' && <Feed /> }
-    </Container>
+      {/* Main Content */}
+      <div className='main-content'>
+        <Container maxWidth="sm">
+            { currentContent === 'feed' && <Feed /> }
+        </Container>
+      </div>
+
+      {/* New Tweet */}
+      <div className='sidebar'>
+        {/* Floating Button */}
+        <Fab color="secondary" onClick={openNewTweet}>
+          <EditIcon />
+        </Fab>
+      </div>
+      <Post />
+
+      {/* Footer */}
+    </div>
   )
 }
 
