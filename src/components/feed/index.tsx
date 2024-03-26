@@ -17,7 +17,9 @@ const Feed = () => {
         content: 'This is a new tweet!',
         createdAt: new Date(),
         updatedAt: new Date(),
-        numbLikes: 0
+        numbLikes: 0,
+        liked: false,
+        bookmarked: false,
     };
 
     const fetchMoreData = () => {

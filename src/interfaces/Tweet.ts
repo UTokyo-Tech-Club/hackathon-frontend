@@ -4,4 +4,6 @@ export default interface TweetInterface {
     createdAt: Date;
     updatedAt: Date;
     numbLikes: number;
+    liked: boolean;
+    bookmarked: boolean;
 }

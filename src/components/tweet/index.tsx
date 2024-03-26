@@ -12,20 +12,22 @@ import { faArrowRightArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 
 // MUI
-
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Button';
 import PersonIcon from '@mui/icons-material/Person';
-import { grey, green } from '@mui/material/colors';
 import Typography from '@mui/material/Typography';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import Stack from '@mui/material/Stack';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import Paper from '@mui/material/Paper';
+import Divider from '@mui/material/Divider';
 
 const DEFAULT_INITIAL_DATA = {
     time: new Date().getTime(),
@@ -47,115 +49,81 @@ const DEFAULT_INITIAL_DATA = {
 
 const Tweet: React.FC<{tweet: TweetInterface;}> = ({ tweet }) => {
     return (
-        <Stack>
-            {/* Main Content */}
-            <Stack direction="row" sx={{ border: 1 }}>
+        <Paper elevation={1} sx={{ my: 2 }}>
+            <Stack>
+                {/* Main Content */}
+                <Stack direction="row">
 
-                {/* Profile */}
-                <Stack>
+                    {/* Profile */}
                     <Avatar sx={{ width: 64, height: 64 }}>
                         <PersonIcon />
                     </Avatar>
-                </Stack>
 
-                {/* Content */}
-                <Stack width="100%">
+                    {/* Content */}
+                    <Stack width="100%">
 
-                    {/* Profile Info */}
-                    <Stack direction="row" height={64}>
-                        <Typography alignSelf="center" variant="body2">User A</Typography>
-                        <Button>Follow</Button>
+                        {/* Profile Info */}
+                        <Stack direction="row" height={64}>
+                            <Typography alignSelf="center" variant="body2">User A</Typography>
+                            <Box display='flex' height={32} alignSelf='center' sx={{ ml: 2}}>
+                                <Button variant="outlined">Follow</Button>
+                            </Box>
+                        </Stack>
+
+                        <Box>
+                            <Content data={DEFAULT_INITIAL_DATA}/>
+                        </Box>
                     </Stack>
 
-                    <Box>
-                        <Content data={DEFAULT_INITIAL_DATA}/>
-                    </Box>
-                </Stack>
-
-                {/* Metadata */}
-                <Stack>
-                    <Button sx={{ mt: 1 }}>
-                        <BookmarkIcon />
-                    </Button>
-
-                    <Stack height="100%" justifyContent="space-around">
-                        <Button>
-                            <Stack>
-                                <FavoriteIcon />
-                                <Typography variant="body2">4</Typography>
-                            </Stack>
+                    {/* Metadata */}
+                    <Stack>
+                        <Button sx={{ mt: 1 }}>
+                            {tweet.bookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
                         </Button>
 
-                        <Button>
-                            <Stack>
-                                <AddCommentIcon />
-                                <Typography variant="body2">4</Typography>
-                            </Stack>
-                        </Button>
+                        <Stack height="100%" justifyContent="space-around">
+                            <Button>
+                                <Stack>
+                                    {tweet.liked ? <FavoriteIcon />: <FavoriteBorderIcon />} 
+                                    <Typography variant="body2">4</Typography>
+                                </Stack>
+                            </Button>
 
-                        <Button>
-                            <Stack>
-                                <ImportExportIcon />
-                                <Typography variant="body2">4</Typography>
-                            </Stack>
-                        </Button>
+                            <Button>
+                                <Stack>
+                                    <AddCommentIcon />
+                                    <Typography variant="body2">4</Typography>
+                                </Stack>
+                            </Button>
 
-                        <Button>
-                            <Stack>
-                                <VisibilityIcon />
-                                <Typography variant="body2">4</Typography>
-                            </Stack>
-                        </Button>
+                            <Button>
+                                <Stack>
+                                    <ImportExportIcon />
+                                    <Typography variant="body2">4</Typography>
+                                </Stack>
+                            </Button>
+
+                            <Button>
+                                <Stack>
+                                    <VisibilityIcon />
+                                    <Typography variant="body2">4</Typography>
+                                </Stack>
+                            </Button>
+                        </Stack>
+
                     </Stack>
-
                 </Stack>
+
+                {/* Links */}
+                <Divider variant="fullWidth" />
+                <Stack direction="row" width="100%">
+                    <Link prev={true} />
+                    <Divider orientation='vertical' variant="fullWidth" flexItem />
+                    <Link prev={false} />
+                </Stack>
+
             </Stack>
-
-            {/* Links */}
-            <Stack direction="row" width="100%">
-                <Link />
-                <Link />
-            </Stack>
-
-        </Stack>
-
-        // <div className='tweet'>
-        //     <div className='profile'>
-        //         <FontAwesomeIcon className='icon' icon={faUser} />
-        //         <p>Profile</p>
-        //         <Button className='bookmark'>
-        //             <FontAwesomeIcon icon={faBookmark} />
-        //         </Button>
-        //     </div>
-
-        //     <div className='content'>
-        //         <Content data={DEFAULT_INITIAL_DATA}/>
-        //     </div>
-
-        //     <div className='meta'>
-        //         <button>
-        //             <FontAwesomeIcon className='icon' icon={faComment} />
-        //             <p>4</p>
-        //         </button>
-
-        //         <button>
-        //             <FontAwesomeIcon className='icon' icon={faHeart} />
-        //             <p>4</p>
-        //         </button>
-
-        //         <button>
-        //             <FontAwesomeIcon className='icon' icon={faArrowRightArrowLeft} />
-        //             <p>4</p>
-        //         </button>
-
-        //         <button>
-        //             <FontAwesomeIcon className='icon' icon={faEye} />
-        //             <p>4</p>
-        //         </button>
-        //     </div>
-
-
-        // </div>
+        </Paper>
     );
 }
 
