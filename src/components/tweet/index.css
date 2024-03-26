@@ -1,4 +1,4 @@
-.tweet {
+/* .tweet {
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -31,6 +31,7 @@
             height: 25px;
             margin: 5px;
             margin-left: auto;
+            border: black 1px solid;
         }
     }
     
@@ -67,4 +68,4 @@
         }
     }
 
-}
+} */

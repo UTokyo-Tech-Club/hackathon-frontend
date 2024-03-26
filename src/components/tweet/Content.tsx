@@ -156,7 +156,7 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
         // };
     }, []);
 
-    return <div className='content-field' id={uid}></div>;
+    return <div id={uid}></div>;
 };
 
 export default Content

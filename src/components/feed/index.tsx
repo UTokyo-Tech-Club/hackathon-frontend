@@ -4,6 +4,9 @@ import TweetInterface from "../../interfaces/Tweet";
 import log from 'loglevel';
 import Tweet from "../tweet";
 
+// MUI
+import Container from '@mui/material/Container';
+
 const Feed = () => {
     const loaderRef = useRef(null);
 
@@ -45,12 +48,12 @@ const Feed = () => {
     }, []);
 
     return (
-        <div className="feed">
+        <Container>
             {tweets.map((item, index) => (
                 <Tweet key={index} tweet={item} />
             ))}
             <div ref={loaderRef}>Loading more...</div>
-        </div>
+        </Container>
     );
 }
 

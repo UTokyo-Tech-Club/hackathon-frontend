@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import useWebSocket from 'react-use-websocket';
 import { auth } from './firebase/config'
@@ -8,8 +6,15 @@ import { getToken } from './firebase/auth'
 import log from 'loglevel';
 import Feed from './components/feed';
 import NavBar from './components/navbar';
+import UseAppStore from './stores/App';
+import Copyright from './components/decorations/copyright';
 
-function App() {
+// MUI
+import Container from '@mui/material/Container';
+
+export default function App() {
+
+  const { currentDisplay, setDisplay } = UseAppStore();
 
   const WS_URL = 'ws://localhost:8080/ws';
 
@@ -46,11 +51,12 @@ function App() {
   }, []);
 
   return (
-    <div className='app'>
-      <NavBar />
-      <Feed />
-    </div>
+    <Container maxWidth="sm">
+      {/* <NavBar />
+      <Copyright /> */}
+
+      { currentDisplay === 'feed' && <Feed /> }
+    </Container>
   )
 }
 
-export default App
