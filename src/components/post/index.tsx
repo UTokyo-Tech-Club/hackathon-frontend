@@ -8,35 +8,46 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import PersonIcon from '@mui/icons-material/Person';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const Post: React.FC = () => {
     const { isNewTweetOpen, closeNewTweet } = UseAppStore();
 
+    const handPublish = () => {
+        closeNewTweet();
+    }
+
     return (
         <Dialog open={isNewTweetOpen} fullWidth>
-            <Stack>
-
-                {/* Header */}
-                <AppBar position="static">
+            <AppBar position="static">
                     <Toolbar>
-                        <IconButton
-                            size="large"
-                            edge="start"
-                            color="inherit"
-                            aria-label="menu"
-                            sx={{ mr: 2 }}
-                            onClick={closeNewTweet}
-                        >
+                        <IconButton edge="end" color="inherit" onClick={closeNewTweet}>
                             <CloseIcon />
                         </IconButton>
                     </Toolbar>
                 </AppBar>
+            <Stack>
+
+                {/* Header */}
+                
 
                 {/* Editor */}
-                <Stack direction='row' width='100%' sx={{border:1}}>
+                <Stack direction='row' sx={{ m: 1, border: 1}}>
+                    <Avatar sx={{ width: 32, height: 32, m: 1}}>
+                        <PersonIcon />
+                    </Avatar>
                     <Editor />
                 </Stack>
+
+                <Button onClick={handPublish}>
+                    Publish
+                    <ArrowForwardIcon />
+                </Button>
 
             </Stack>
         </Dialog>   

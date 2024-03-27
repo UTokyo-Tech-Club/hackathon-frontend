@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import useWebSocket from 'react-use-websocket';
-import { auth } from './firebase/config'
+import { authApp } from './firebase/config'
 import { getToken } from './firebase/auth'
 import log from 'loglevel';
 import Feed from './components/feed';
@@ -9,6 +9,8 @@ import NavBar from './components/navbar';
 import UseAppStore from './stores/App';
 import Copyright from './components/decorations/copyright';
 import Post from './components/post';
+import Profile from './components/profile';
+import UseUserStore from './stores/User';
 
 // MUI
 import Container from '@mui/material/Container';
@@ -22,8 +24,12 @@ import Popup from 'reactjs-popup';
 export default function App() {
 
   const { currentContent, setContent, openNewTweet} = UseAppStore();
+  const { signIn } = UseUserStore();
 
   const WS_URL = 'ws://localhost:8080/ws';
+  // const WS_URL = 'ws://hackathon-backend-asyof5iquq-an.a.run.app/ws';
+
+  
 
   const { sendMessage, lastMessage } = useWebSocket(WS_URL, {
     onOpen: () => {
@@ -44,11 +50,13 @@ export default function App() {
   log.setLevel(log.levels.DEBUG);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    const unsubscribe = authApp.onAuthStateChanged(async (user) => {
         if (user) {
-            log.info("Frontend signed in as ", user.uid);
-            sendMessage(JSON.stringify({ type: 'auth', data: await getToken() }));
-            // Perform any additional actions after successful sign-in
+          signIn(user as any);
+
+          log.info("Frontend signed in as ", user.uid);
+          sendMessage(JSON.stringify({ type: 'auth', data: await getToken() }));
+          // Perform any additional actions after successful sign-in
         } else {
             log.warn("No user is signed in")
         }
@@ -59,6 +67,11 @@ export default function App() {
 
   return (
     <div className='wrapper'>
+      <div className='sidebar'>
+        {/* Sidebar */}
+        <Profile />
+      </div>  
+
 
       {/* Main Content */}
       <div className='main-content'>

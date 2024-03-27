@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import TweetInterface from '../interfaces/Tweet';
+import { TweetInterface } from '../interfaces/Tweet';
 
 type FeedStore = {
     tweets: TweetInterface[];

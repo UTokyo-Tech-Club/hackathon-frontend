@@ -57,15 +57,7 @@ const DEFAULT_INITIAL_DATA = {
 
 
 
-// interface Data {
-//     time: number;
-//     blocks: {
-//         type: string;
-//         data: {
-//             text: string;
-//         };
-//     }[];
-// }
+
 
 const Editor: React.FC = () => {
     const ejInstance = useRef<EditorJS | null>(null);
@@ -155,7 +147,11 @@ const Editor: React.FC = () => {
         // };
     }, []);
 
-    return <div id={uid}></div>;
+    const style = {
+        width: '100%',
+    }
+
+    return <div id={uid} style={style}></div>;
 };
 
 export default Editor

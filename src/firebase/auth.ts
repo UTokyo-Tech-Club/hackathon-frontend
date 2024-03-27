@@ -1,10 +1,10 @@
-import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from './config'
+import { signInWithPopup, getAuth, signOut } from "firebase/auth";
+import { authApp, googleProvider } from './config'
 import log from "loglevel";
 
 const getToken = async () => {
     try {
-        const user = auth.currentUser;
+        const user = authApp.currentUser;
         if (user) {
             const token = await user.getIdToken();
             return token; // Return the token
@@ -16,8 +16,16 @@ const getToken = async () => {
     }
 };
 
+const signOutUser = () => {
+    signOut(authApp).then(() => {
+        log.info("Signed out successfully");
+    }).catch((error) => {
+        log.error("Sign out error", error);
+    });
+}
 
-const signInWithGoogle = () => signInWithPopup(auth, googleProvider)
+
+const signInWithGoogle = () => signInWithPopup(authApp, googleProvider)
 
 
-export { getToken, signInWithGoogle };
+export { getToken, signInWithGoogle, signOutUser };
