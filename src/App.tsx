@@ -17,15 +17,10 @@ import EditIcon from '@mui/icons-material/Edit';
 
 export default function App() {
 
-  const { isDeployed, currentContent, openNewTweet} = UseAppStore();
+  const { currentContent, openNewTweet} = UseAppStore();
   const { signIn } = UseUserStore();
 
-  var WS_URL = '';
-  if (isDeployed) {
-    WS_URL = 'ws://hackathon-backend-asyof5iquq-an.a.run.app/ws';
-  } else {
-    WS_URL = 'ws://localhost:8080/ws';
-  }
+  var WS_URL = import.meta.env.VITE_WS_URI;
 
   const { sendMessage } = useWebSocket(WS_URL, {
     onOpen: () => {
