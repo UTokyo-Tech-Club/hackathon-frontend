@@ -1,29 +1,23 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from "react";
 import './App.css'
 import useWebSocket from 'react-use-websocket';
 import { authApp } from './firebase/config'
 import { getToken } from './firebase/auth'
 import log from 'loglevel';
 import Feed from './components/feed';
-import NavBar from './components/navbar';
 import UseAppStore from './stores/App';
-import Copyright from './components/decorations/copyright';
-import Post from './components/post';
 import Profile from './components/profile';
 import UseUserStore from './stores/User';
+import Post from "./components/post";
 
 // MUI
 import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import { height } from '@fortawesome/free-solid-svg-icons/fa0';
-import Popup from 'reactjs-popup';
 
 export default function App() {
 
-  const { currentContent, setContent, openNewTweet} = UseAppStore();
+  const { currentContent, openNewTweet} = UseAppStore();
   const { signIn } = UseUserStore();
 
   const WS_URL = 'ws://localhost:8080/ws';
@@ -31,7 +25,7 @@ export default function App() {
 
   
 
-  const { sendMessage, lastMessage } = useWebSocket(WS_URL, {
+  const { sendMessage } = useWebSocket(WS_URL, {
     onOpen: () => {
       log.info("WebSocket connection established.");
     },

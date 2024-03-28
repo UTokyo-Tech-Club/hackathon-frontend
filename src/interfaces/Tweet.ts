@@ -1,5 +1,4 @@
 interface TweetData {
-    // time: number;
     blocks: {
         type: string;
         data: {

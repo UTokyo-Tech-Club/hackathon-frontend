@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import UseFeedStore from "../../stores/Feed";
-import TweetInterface from "../../interfaces/Tweet";
+import { TweetInterface, TweetData } from "../../interfaces/Tweet";
 import log from 'loglevel';
 import Tweet from "../tweet";
 
@@ -12,9 +12,21 @@ const Feed = () => {
 
     const { tweets, addTweet } = UseFeedStore();
 
+    const tweet: TweetData = {
+        blocks: [
+            {
+                type: 'paragraph',
+                data: {
+                    text: 'Hello World!'
+                }
+            }
+        ]
+    }
+
     const newTweet: TweetInterface = {
         uid: '2',
-        content: 'This is a new tweet!',
+        createdBy: 'Theo Jang',
+        content: tweet,
         createdAt: new Date(),
         updatedAt: new Date(),
         numbLikes: 0,

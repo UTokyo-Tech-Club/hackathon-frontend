@@ -1,7 +1,6 @@
-import TweetInterface from "../../interfaces/Tweet";
+import { TweetInterface } from "../../interfaces/Tweet";
 
 // MUI
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
@@ -11,7 +10,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import Box from '@mui/material/Box';
 
 
-const Link: React.FC<{ prev: boolean, tweet?: TweetInterface }> = ({ prev, tweet }) => {
+const Link: React.FC<{ prev: boolean, tweet?: TweetInterface }> = ({ prev }) => {
     return (
         <Box
             sx={{

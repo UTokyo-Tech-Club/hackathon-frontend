@@ -14,7 +14,7 @@ import { Button } from '@mui/material';
 
 const Profile = () => {
 
-    const { isSignedIn, uid, username, email, signOut } = UseUserStore();
+    const { isSignedIn, username, email, signOut } = UseUserStore();
     const { isProfileSettingsOpen, profileSettingsAnchor, toggleProfileSettings, setProfileSettingsAnchor } = UseAppStore();
     
     const handleProfileSettings = (event: React.MouseEvent<HTMLElement>) => {

@@ -1,4 +1,4 @@
-import { signInWithPopup, getAuth, signOut } from "firebase/auth";
+import { signInWithPopup, signOut } from "firebase/auth";
 import { authApp, googleProvider } from './config'
 import log from "loglevel";
 
