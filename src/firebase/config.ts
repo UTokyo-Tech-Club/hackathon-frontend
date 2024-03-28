@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCKHLVg_KPnsuVirVD8PYT-p2Jz7jYqyS0",
-    authDomain: "mesh-ade28.firebaseapp.com",
-    projectId: "mesh-ade28",
-    storageBucket: "mesh-ade28.appspot.com",
-    messagingSenderId: "189001086824",
-    appId: "1:189001086824:web:9faaee1bb04740eee888dd",
-    measurementId: "G-B4E68X45BV"
+    apiKey: "AIzaSyBJYAF2fVlb2EKrACC7f8tVqPqu74C2cTI",
+    authDomain: "hackathon-76e20.firebaseapp.com",
+    projectId: "hackathon-76e20",
+    storageBucket: "hackathon-76e20.appspot.com",
+    messagingSenderId: "808489631124",
+    appId: "1:808489631124:web:9f4f82493ec11231e6e381",
+    measurementId: "G-V0MSX9CMV9"
 };
 
 const app = initializeApp(firebaseConfig);
