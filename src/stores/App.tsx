@@ -3,6 +3,8 @@ import { create } from 'zustand';
 type ContentType = "feed" | "tweet" | "newTweet";
 
 type AppStore = {
+    isDeployed: boolean;
+
     currentContent: ContentType;
     isNewTweetOpen: boolean;
     isProfileSettingsOpen: boolean;
@@ -18,6 +20,8 @@ type AppStore = {
 }
 
 const UseAppStore = create<AppStore>((set) => ({
+    isDeployed: Boolean(process.env.VERCEL),
+
     currentContent: "feed",
     isNewTweetOpen: false,
     isProfileSettingsOpen: false,
