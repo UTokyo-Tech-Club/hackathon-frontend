@@ -2,6 +2,7 @@ import UseAppStore from '../../stores/App';
 import Editor from './Editor';
 import { WebSocketContext } from '../../websocket/websocket';
 import { useContext } from 'react';
+import UsePostStore from '../../stores/Post';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
@@ -28,8 +29,10 @@ const Post: React.FC = () => {
 
     const { isNewTweetOpen, closeNewTweet } = UseAppStore();
 
+    const { blocks } = UsePostStore();
+
     const handPublish = () => {
-        sendMessage(JSON.stringify({ type: 'tweet', action: 'post', data: JSON.stringify({ content: 'Hello World' }) }));
+        sendMessage(JSON.stringify({ type: 'tweet', action: 'post', data: JSON.stringify(blocks) }));
         closeNewTweet();
     }
 

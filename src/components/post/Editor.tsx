@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import EditorJS, { EditorConfig, BlockToolConstructable } from '@editorjs/editorjs';
 import { v4 as uuidv4 } from 'uuid';
 import log from 'loglevel';
+import UsePostStore from '../../stores/Post';
 //@ts-ignore
 import Header from "@editorjs/header";
 //@ts-ignore
@@ -64,6 +65,8 @@ const Editor: React.FC = () => {
 
     const uid = uuidv4();
 
+    const { setBlocks } = UsePostStore();
+
     useEffect(() => {
         if (!ejInstance.current) {
             // Define the editor configuration with the correct type
@@ -124,9 +127,9 @@ const Editor: React.FC = () => {
                 },
                 onChange: async () => {
                     if (ejInstance.current) {
-
-                        // let saved = await ejInstance.current.save();
-                        // log.info(saved['blocks']);
+                        let saved = await ejInstance.current.save();
+                        setBlocks(saved['blocks'])
+                        log.info('Saved data:', saved['blocks'])
                         return
                     }
                     log.error('Editor.js instance is not available')
