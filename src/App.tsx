@@ -9,6 +9,7 @@ import Profile from './components/profile';
 import UseUserStore from './stores/User';
 import Post from "./components/post";
 import { WebSocketContext } from './websocket/websocket';
+import Copyright from "./components/decorations/copyright";
 
 // MUI
 import Container from '@mui/material/Container';
@@ -36,7 +37,6 @@ export default function App() {
 
           log.info("Frontend signed in as ", user.uid);
           sendMessage(JSON.stringify({ type: 'user', action: "auth", data: JSON.stringify({ token: await getToken() }) }));
-          // Perform any additional actions after successful sign-in
         } else {
             log.warn("No user is signed in")
         }
@@ -46,29 +46,32 @@ export default function App() {
   }, []);
 
   return (
-    <Stack direction="row" justifyContent="center">
-      <div className='sidebar'>
+    <>
+      <Stack direction="row" justifyContent="center">
         {/* Sidebar */}
-        <Profile />
-      </div>  
+        <div className='sidebar'>
+          <Profile />
+        </div>  
 
-      {/* Main Content */}
-      <Container maxWidth="sm" sx={{ mx: 0 }}>
-          { currentContent === 'feed' && <Feed /> }
-      </Container>
+        {/* Main Content */}
+        <Container maxWidth="sm" sx={{ mx: 0 }}>
+            { currentContent === 'feed' && <Feed /> }
+        </Container>
 
-      {/* New Tweet */}
-      <div className='sidebar'>
-        {/* Floating Button */}
-        <Fab color="secondary" sx={{ alignSelf: "flex-end" }} onClick={openNewTweet}>
-          <EditIcon />
-        </Fab>
-      </div>
-      {/* New Tweet Dialog */}
-      <Post />
+        {/* Sidebar */}
+        <div className='sidebar'>
+          {/* New Tweet Button */}
+          <Fab color="secondary" sx={{ alignSelf: "flex-end" }} onClick={openNewTweet}>
+            <EditIcon />
+          </Fab>
+        </div>
+        {/* New Tweet Dialog */}
+        <Post />
+      </Stack>
 
       {/* Footer */}
-    </Stack>
+      <Copyright />
+    </>
   )
 }
 

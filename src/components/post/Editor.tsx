@@ -69,6 +69,8 @@ const Editor: React.FC = () => {
             // Define the editor configuration with the correct type
             const editorConfig: EditorConfig = {
                 holder: uid,
+                defaultBlock: "paragraph",
+                minHeight: 10,
                 tools: {
                     header: {
                         class: Header as unknown as BlockToolConstructable,
