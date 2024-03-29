@@ -51,7 +51,6 @@ export default function App() {
         <Profile />
       </div>  
 
-
       {/* Main Content */}
       <div className='main-content'>
         <Container maxWidth="sm">
@@ -62,7 +61,7 @@ export default function App() {
       {/* New Tweet */}
       <div className='sidebar'>
         {/* Floating Button */}
-        <Fab color="secondary" onClick={openNewTweet}>
+        <Fab color="secondary" sx={{ alignSelf: "flex-end" }} onClick={openNewTweet}>
           <EditIcon />
         </Fab>
       </div>

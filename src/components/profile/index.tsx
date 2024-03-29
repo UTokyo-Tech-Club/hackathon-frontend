@@ -23,7 +23,7 @@ const Profile = () => {
     }
 
     return (
-        <Container>
+        <Container sx={{ alignSelf: "flex-end" }}>
             {/* Profile Icon */}
             <Tooltip title={email}> 
                 <IconButton onClick={handleProfileSettings}>

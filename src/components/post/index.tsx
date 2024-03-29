@@ -33,14 +33,14 @@ const Post: React.FC = () => {
     return (
         <Dialog open={isNewTweetOpen} fullWidth>
             <AppBar position="static">
-                    <Toolbar>
-                        <IconButton edge="end" color="inherit" onClick={closeNewTweet}>
-                            <CloseIcon />
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
-            <Stack>
+                <Toolbar>
+                    <IconButton edge="end" color="inherit" onClick={closeNewTweet}>
+                        <CloseIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
 
+            <Stack>
                 {/* Header */}
                 
 

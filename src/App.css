@@ -1,10 +1,11 @@
 .sidebar {
-  width: 25%;
-  height: 25vh;
+  width: 15%;
+  height: 90vh;
   min-height: 200px;
   overflow: auto;
   position: sticky;
   top: 5%;
+  display: flex;
 }
 
 .main-content {
@@ -16,9 +17,6 @@
 
 .main-content,
 .sidebar {
-  border: 1px solid #222;
-  background-color: white;
-  border-radius: 10px;
   color: #222;
   padding: 15px;
   margin: 10px;
@@ -30,7 +28,7 @@
 }
 
 body {
-  padding: 3%;
+  padding: 1%;
   background-color: #ccc;
   font-size: 20px;
   box-sizing: border-box;

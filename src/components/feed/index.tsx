@@ -3,6 +3,7 @@ import UseFeedStore from "../../stores/Feed";
 import { TweetInterface, TweetData } from "../../interfaces/Tweet";
 import log from 'loglevel';
 import Tweet from "../tweet";
+import CircularProgress from '@mui/material/CircularProgress';
 
 // MUI
 import Container from '@mui/material/Container';
@@ -47,7 +48,7 @@ const Feed = () => {
                     fetchMoreData();
                 }
             },
-            { threshold: 1.0 }
+            { threshold: 0.5 }
         );
 
         if (loaderRef.current) {
@@ -59,14 +60,15 @@ const Feed = () => {
                 observer.unobserve(loaderRef.current);
             }
         };
-    }, []);
+    }, [fetchMoreData]);
 
     return (
         <Container>
             {tweets.map((item, index) => (
                 <Tweet key={index} tweet={item} />
             ))}
-            <div ref={loaderRef}>Loading more...</div>
+
+            <CircularProgress ref={loaderRef} sx={{ alignSelf: "center" }} />
         </Container>
     );
 }
