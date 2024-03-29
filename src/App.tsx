@@ -14,6 +14,7 @@ import { WebSocketContext } from './websocket/websocket';
 import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
+import { Stack } from "@mui/material";
 
 export default function App() {
 
@@ -45,18 +46,16 @@ export default function App() {
   }, []);
 
   return (
-    <div className='wrapper'>
+    <Stack direction="row" justifyContent="center">
       <div className='sidebar'>
         {/* Sidebar */}
         <Profile />
       </div>  
 
       {/* Main Content */}
-      <div className='main-content'>
-        <Container maxWidth="sm">
-            { currentContent === 'feed' && <Feed /> }
-        </Container>
-      </div>
+      <Container maxWidth="sm" sx={{ mx: 0 }}>
+          { currentContent === 'feed' && <Feed /> }
+      </Container>
 
       {/* New Tweet */}
       <div className='sidebar'>
@@ -65,10 +64,11 @@ export default function App() {
           <EditIcon />
         </Fab>
       </div>
+      {/* New Tweet Dialog */}
       <Post />
 
       {/* Footer */}
-    </div>
+    </Stack>
   )
 }
 

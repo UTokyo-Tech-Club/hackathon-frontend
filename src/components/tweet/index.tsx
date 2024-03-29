@@ -21,7 +21,7 @@ import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 
 const DEFAULT_INITIAL_DATA = {
-    time: new Date().getTime(),
+    // time: new Date().getTime(),
     blocks: [
         {
             type: "header",
@@ -33,6 +33,12 @@ const DEFAULT_INITIAL_DATA = {
             type: "paragraph",
             data: {
                 text: "text...",
+            },
+        },
+        {
+            type: "paragraph",
+            data: {
+                text: "text...2222",
             },
         },
     ],
@@ -61,6 +67,7 @@ const Tweet: React.FC<{tweet: TweetInterface;}> = ({ tweet }) => {
                             </Box>
                         </Stack>
 
+                        {/* Editor.js */}
                         <Box>
                             <Content data={DEFAULT_INITIAL_DATA}/>
                         </Box>

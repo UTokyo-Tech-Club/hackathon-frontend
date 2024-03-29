@@ -35,9 +35,9 @@ import ChecklistTool from "@editorjs/checklist";
 //@ts-ignore
 import AlignmentTuneTool from "editorjs-text-alignment-blocktune";
 
-interface CustomHeaderConfig {
-    placeholder?: string;
-}
+// interface CustomHeaderConfig {
+//     placeholder?: string;
+// }
 
 // const DEFAULT_INITIAL_DATA = {
 //     time: new Date().getTime(),
@@ -58,7 +58,6 @@ interface CustomHeaderConfig {
 
 
 interface Data {
-    time: number;
     blocks: {
         type: string;
         data: {
@@ -76,20 +75,23 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
         if (!ejInstance.current) {
             // Define the editor configuration with the correct type
             const editorConfig: EditorConfig = {
+
                 readOnly: true,
+                defaultBlock: "embed",
                 holder: uid,
+                minHeight: 10,
                 tools: {
                     header: {
                         class: Header as unknown as BlockToolConstructable,
-                        config: {
-                                placeholder: "Header...",
-                            } as CustomHeaderConfig,
-                        inlineToolbar: true,
+                        // config: {
+                        //         placeholder: "Header...",
+                        //     } as CustomHeaderConfig,
+                        // inlineToolbar: true,
                         tunes: ["textAlignment"],
                     },
                     list: {
                         class: ListTool,
-                        inlineToolbar: true,
+                        // inlineToolbar: true,
                         config: {
                             defaultStyle: 'unordered'
                         },
@@ -98,14 +100,14 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
 
                     paragraph: {
                         class: ParagraphTool,
-                        inlineToolbar: true,
+                        // inlineToolbar: true,
                         tunes: ["textAlignment"],
-                        config: {
-                            placeholder: "Write...",
-                        },
+                        // config: {
+                        //     placeholder: "Write...",
+                        // },
                     },
 
-                    // raw: RawTool,
+                    raw: RawTool,
                     code: CodeTool,
                     embed: EmbedTool,
                     quote: QuoteTool,
@@ -131,7 +133,6 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
                 },
                 onChange: async () => {
                     if (ejInstance.current) {
-
                         // let saved = await ejInstance.current.save();
                         // log.info(saved['blocks']);
                         return

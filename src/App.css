@@ -1,46 +1,13 @@
 .sidebar {
-  width: 15%;
   height: 90vh;
   min-height: 200px;
-  overflow: auto;
   position: sticky;
   top: 5%;
   display: flex;
-}
-
-.main-content {
-  width: 60%;
-  min-height: 1000px;
-  display: flex;
-  flex-direction: column;
-}
-
-.main-content,
-.sidebar {
-  color: #222;
-  padding: 15px;
   margin: 10px;
 }
 
 .wrapper {
   display: flex;
-  justify-content: space-between;
-}
-
-body {
-  padding: 1%;
-  background-color: #ccc;
-  font-size: 20px;
-  box-sizing: border-box;
-  font-family: Lato, sans-serif;
-}
-
-code, pre {
-  background-color: #ccc;
-  padding: 0 3px;
-  border-radius: 5px;
-}
-
-.bottom {
-  justify-self: bottom;
+  justify-content: center;
 }
