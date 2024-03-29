@@ -1,6 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import './App.css'
-import useWebSocket from 'react-use-websocket';
 import { authApp } from './firebase/config'
 import { getToken } from './firebase/auth'
 import log from 'loglevel';
@@ -9,6 +8,7 @@ import UseAppStore from './stores/App';
 import Profile from './components/profile';
 import UseUserStore from './stores/User';
 import Post from "./components/post";
+import { WebSocketContext } from './websocket/websocket';
 
 // MUI
 import Container from '@mui/material/Container';
@@ -17,28 +17,16 @@ import EditIcon from '@mui/icons-material/Edit';
 
 export default function App() {
 
+  log.setLevel(log.levels.DEBUG);
+
   const { currentContent, openNewTweet} = UseAppStore();
   const { signIn } = UseUserStore();
 
-  var WS_URL = import.meta.env.VITE_WS_URI;
-
-  const { sendMessage } = useWebSocket(WS_URL, {
-    onOpen: () => {
-      log.info("WebSocket connection established.");
-    },
-    // Optionally add other event handlers, such as onClose, onError, etc.
-    onMessage: (event) => {
-      log.info('Server:', event.data);
-    },
-    onError: (event) => {
-      log.error('WebSocket error:', event);
-    },
-    onClose: () => {
-      log.warn('WebSocket connection closed.')
-    }
-  });
-
-  log.setLevel(log.levels.DEBUG);
+  const wsCtx = useContext(WebSocketContext);
+  if (!wsCtx) {
+    throw new Error('Context not found');
+  }
+  const { sendMessage } = wsCtx;
 
   useEffect(() => {
     const unsubscribe = authApp.onAuthStateChanged(async (user) => {
@@ -46,7 +34,7 @@ export default function App() {
           signIn(user as any);
 
           log.info("Frontend signed in as ", user.uid);
-          sendMessage(JSON.stringify({ type: 'auth', data: await getToken() }));
+          sendMessage(JSON.stringify({ type: 'user', action: "auth", data: JSON.stringify({ token: await getToken() }) }));
           // Perform any additional actions after successful sign-in
         } else {
             log.warn("No user is signed in")

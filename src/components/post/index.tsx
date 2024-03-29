@@ -1,5 +1,7 @@
 import UseAppStore from '../../stores/App';
 import Editor from './Editor';
+import { WebSocketContext } from '../../websocket/websocket';
+import { useContext } from 'react';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
@@ -14,9 +16,17 @@ import Button from '@mui/material/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const Post: React.FC = () => {
+
+    const wsCtx = useContext(WebSocketContext);
+    if (!wsCtx) {
+        throw new Error('Context not found');
+    }
+    const { sendMessage } = wsCtx;
+
     const { isNewTweetOpen, closeNewTweet } = UseAppStore();
 
     const handPublish = () => {
+        sendMessage(JSON.stringify({ type: 'tweet', action: 'post', data: JSON.stringify({ content: 'Hello World' }) }));
         closeNewTweet();
     }
 
