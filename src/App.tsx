@@ -29,7 +29,7 @@ export default function App() {
 
   const wsCtx = useContext(WebSocketContext);
   if (!wsCtx) {
-    throw new Error('Context not found');
+      throw new Error('Context not found');
   }
   const { sendWS } = wsCtx;
 
