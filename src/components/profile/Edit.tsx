@@ -33,41 +33,54 @@ const Edit: React.FC = () => {
     if (!wsCtx) {
         throw new Error('Context not found');
     }
-    const { sendMessage } = wsCtx;
+    const { sendWS } = wsCtx;
 
-    const { isEditProfileOpen, closeEditProfile } = UseAppStore();
+    const { isEditProfileOpen, closeEditProfile, openSnack } = UseAppStore();
 
     const { blocks } = UseProfileStore();
 
     const { photoURL, username, email, setUsername } = UseUserStore();
 
-    console.log(photoURL)
-
     const handleSave = async () => {
-        // Update firebase
-        const user = authApp.currentUser;
-        if (user) {
+
+        const updateFirebaseProfile = async () => {
+            const user = authApp.currentUser;
+            if (user) {
+                try {
+                    await updateProfile(user, {
+                        displayName: username,
+                        photoURL: photoURL
+                    });
+                } catch (error) {
+                    log.error("Firebase error updating profile", error);
+                }
+            }
+        };
+
+        const updateBackendProfile = async () => {
             try {
-                await updateProfile(user, {
-                    displayName: username,
-                    photoURL: photoURL
-                });
+                await sendWS("push", JSON.stringify({ 
+                    type: 'user', 
+                    action: 'edit', 
+                    data: { 
+                        username: username, 
+                        photoURL: photoURL, 
+                        bio: JSON.stringify(blocks) 
+                    }}));
             } catch (error) {
-                log.error("Firebase error updating profile", error);
+                log.error("Error sending message: ", error)
             }
         }
 
-        // Update backend
-        sendMessage(JSON.stringify({ 
-            type: 'user', 
-            action: 'edit', 
-            data: { 
-                username: username, 
-                photoURL: photoURL, 
-                bio: JSON.stringify(blocks) 
-            }}));
-
-        closeEditProfile();
+        Promise.all([updateFirebaseProfile(), updateBackendProfile()])
+            .then(() => {
+                closeEditProfile();
+                openSnack("Profile Updated!", "success");
+            })
+            .catch((error) => {
+                openSnack("Please Retry...", "error");
+                log.error("Error updating profile: ", error)
+            });
     }
 
     const minUsernameLength = 3;

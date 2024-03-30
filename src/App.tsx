@@ -10,6 +10,7 @@ import UseUserStore from './stores/User';
 import Post from "./components/post";
 import { WebSocketContext } from './websocket/websocket';
 import Copyright from "./components/decorations/copyright";
+import { PushResponse } from "./websocket/model";
 
 // MUI
 import Container from '@mui/material/Container';
@@ -30,16 +31,25 @@ export default function App() {
   if (!wsCtx) {
     throw new Error('Context not found');
   }
-  const { sendMessage } = wsCtx;
+  const { sendWS } = wsCtx;
 
   useEffect(() => {
     const unsubscribe = authApp.onAuthStateChanged(async (user) => {
         if (user) {
+          try {
+            const result = await sendWS(
+              JSON.stringify({ 
+                type: 'user', 
+                action: "auth", 
+                data: 
+                JSON.stringify({ token: await getToken() })}), null) as unknown as PushResponse;
+            if (result.error !== "null") return
+          } catch (error) {
+            log.error("Error sending to backend: ", error);
+          }
+
           signIn(user as any);
-
-          log.info("Frontend signed in as ", user.uid);
-          sendMessage(JSON.stringify({ type: 'user', action: "auth", data: JSON.stringify({ token: await getToken() }) }));
-
+          log.info("Front & backend signed in as ", user.uid);
           openSnack("Wellcome " + user.displayName, "success");
         } else {
             log.warn("No user is signed in")
