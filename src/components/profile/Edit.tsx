@@ -1,8 +1,8 @@
 import UseAppStore from '../../stores/App';
-import Editor from './Editor';
 import { WebSocketContext } from '../../websocket/websocket';
 import { useContext } from 'react';
-import UsePostStore from '../../stores/Post';
+import UseProfileStore from '../../stores/Profile';
+import Editor from './Editor';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
@@ -22,7 +22,7 @@ import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 
-const Post: React.FC = () => {
+const Edit: React.FC = () => {
 
     const wsCtx = useContext(WebSocketContext);
     if (!wsCtx) {
@@ -30,28 +30,32 @@ const Post: React.FC = () => {
     }
     const { sendMessage } = wsCtx;
 
-    const { isNewTweetOpen, closeNewTweet } = UseAppStore();
+    const { isEditProfileOpen, closeEditProfile } = UseAppStore();
 
-    const { blocks } = UsePostStore();
+    const { blocks } = UseProfileStore();
 
-    const handPublish = () => {
-        sendMessage(JSON.stringify({ type: 'tweet', action: 'post', data: JSON.stringify(blocks) }));
-        closeNewTweet();
+    const handleSave = () => {
+        // sendMessage(JSON.stringify({ type: 'tweet', action: 'post', data: JSON.stringify(blocks) }));
+        // closeNewTweet();
+        closeEditProfile();
     }
 
     return (
-        <Dialog open={isNewTweetOpen} fullWidth sx={{ maxHeight: "80vh" }}>
-            <ClickAwayListener onClickAway={closeNewTweet}>
+        <Dialog open={isEditProfileOpen} fullWidth sx={{ maxHeight: "80vh" }}>
+            <ClickAwayListener onClickAway={closeEditProfile}>
                 <Paper>
                     {/* Header */}
                     <AppBar position="sticky" color="inherit">
-                        <Toolbar>
-                            <IconButton edge="end" color="inherit" onClick={closeNewTweet}>
+                        <Toolbar sx={{ display: "flex" }}>
+                            <IconButton edge="end" color="inherit" onClick={closeEditProfile}>
                                 <CloseIcon />
                             </IconButton>
                             <Typography variant="body1" sx={{ ml: 3 }}>
-                                新規投稿
+                                プロフィール編集
                             </Typography>
+                            <Button variant="contained" sx={{ m: 1, ml: "auto", p: 2, py: 1, alignSelf: "flex-end" }} onClick={handleSave}>
+                                Save
+                            </Button>
                         </Toolbar>
                     </AppBar>
 
@@ -62,17 +66,7 @@ const Post: React.FC = () => {
                                 <PersonIcon />
                             </Avatar>
                             <Editor />
-                            {/* Footer */}
                         </Stack>
-                        <Divider variant="middle" />
-                        <BottomNavigation>
-                            <Container sx={{ display: "flex", justifyContent: "right" }}>
-                                <Button variant="contained" sx={{ m: 1, p: 2, py: 2.5 }} onClick={handPublish}>
-                                    投稿
-                                    <ArrowForwardIcon />
-                                </Button>
-                            </Container>
-                        </BottomNavigation>
                     </Stack>
                 </Paper>
             </ClickAwayListener>
@@ -80,4 +74,4 @@ const Post: React.FC = () => {
     );
 }
 
-export default Post;
+export default Edit;

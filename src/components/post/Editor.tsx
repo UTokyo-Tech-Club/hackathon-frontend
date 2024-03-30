@@ -72,6 +72,7 @@ const Editor: React.FC = () => {
             // Define the editor configuration with the correct type
             const editorConfig: EditorConfig = {
                 holder: uid,
+                autofocus: true,
                 defaultBlock: "paragraph",
                 minHeight: 10,
                 tools: {

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import EditorJS, { EditorConfig, BlockToolConstructable } from '@editorjs/editorjs';
 import { v4 as uuidv4 } from 'uuid';
 import log from 'loglevel';
+import UsePostStore from '../../stores/Post';
 //@ts-ignore
 import Header from "@editorjs/header";
 //@ts-ignore
@@ -35,62 +36,52 @@ import ChecklistTool from "@editorjs/checklist";
 //@ts-ignore
 import AlignmentTuneTool from "editorjs-text-alignment-blocktune";
 
-// interface CustomHeaderConfig {
-//     placeholder?: string;
-// }
-
-// const DEFAULT_INITIAL_DATA = {
-//     time: new Date().getTime(),
-//     blocks: [
-//         {
-//             type: "paragraph",
-//             data: {
-//                 text: "",
-//             },
-//             config: {
-//                 placeholder: "Write...",
-//             }
-//             // hint: "Write...",
-//         },
-//     ],
-// };
-
-
-
-interface Data {
-    blocks: {
-        type: string;
-        data: {
-            text: string;
-        };
-    }[];
+interface CustomHeaderConfig {
+    placeholder?: string;
 }
 
-const Content: React.FC<{data: Data}> = ({ data }) => {
+const DEFAULT_INITIAL_DATA = {
+    time: new Date().getTime(),
+    blocks: [
+        {
+            type: "paragraph",
+            data: {
+                text: "",
+            },
+            config: {
+                placeholder: "Write...",
+            }
+            // hint: "Write...",
+        },
+    ],
+};
+
+const Editor: React.FC = () => {
     const ejInstance = useRef<EditorJS | null>(null);
 
     const uid = uuidv4();
+
+    const { setBlocks } = UsePostStore();
 
     useEffect(() => {
         if (!ejInstance.current) {
             // Define the editor configuration with the correct type
             const editorConfig: EditorConfig = {
-                readOnly: true,
-                defaultBlock: "embed",
                 holder: uid,
+                defaultBlock: "paragraph",
                 minHeight: 10,
                 tools: {
                     header: {
                         class: Header as unknown as BlockToolConstructable,
-                        // config: {
-                        //         placeholder: "Header...",
-                        //     } as CustomHeaderConfig,
-                        // inlineToolbar: true,
+                        config: {
+                                placeholder: "Header...",
+                            } as CustomHeaderConfig,
+                        inlineToolbar: true,
                         tunes: ["textAlignment"],
                     },
                     list: {
                         class: ListTool,
-                        // inlineToolbar: true,
+                        inlineToolbar: true,
                         config: {
                             defaultStyle: 'unordered'
                         },
@@ -99,14 +90,14 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
 
                     paragraph: {
                         class: ParagraphTool,
-                        // inlineToolbar: true,
+                        inlineToolbar: true,
                         tunes: ["textAlignment"],
-                        // config: {
-                        //     placeholder: "Write...",
-                        // },
+                        config: {
+                            placeholder: "Write...",
+                        },
                     },
 
-                    raw: RawTool,
+                    // raw: RawTool,
                     code: CodeTool,
                     embed: EmbedTool,
                     quote: QuoteTool,
@@ -132,14 +123,15 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
                 },
                 onChange: async () => {
                     if (ejInstance.current) {
-                        // let saved = await ejInstance.current.save();
-                        // log.info(saved['blocks']);
+                        let saved = await ejInstance.current.save();
+                        setBlocks(saved['blocks'])
+                        log.info('Saved data:', saved['blocks'])
                         return
                     }
                     log.error('Editor.js instance is not available')
                 },
 
-                data: data
+                data: DEFAULT_INITIAL_DATA
             };
 
             const editor = new EditorJS(editorConfig);
@@ -156,7 +148,11 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
         // };
     }, []);
 
-    return <div id={uid}></div>;
+    const style = {
+        width: '100%',
+    }
+
+    return <div id={uid} style={style}></div>;
 };
 
-export default Content
+export default Editor
