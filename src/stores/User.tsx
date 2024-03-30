@@ -7,12 +7,14 @@ type User = {
     uid: string;
     username: string;
     email: string;
+    photoURL: string;
 
     signIn: (user: firebase.User) => void;
     signOut: () => void;
     setUid: (uid: string) => void;
     setUsername: (username: string) => void;
     setEmail: (email: string) => void;
+    setPhoto: (photoURL: string) => void;
 }
 
 const UseUserStore = create<User>((set) => ({
@@ -20,8 +22,9 @@ const UseUserStore = create<User>((set) => ({
     uid: '',
     username: '',
     email: '',
+    photoURL: '',
 
-    signIn: (user) => set({ isSignedIn: true, uid: user.uid, username: user.displayName || '', email: user.email || ''}),
+    signIn: (user) => set({ isSignedIn: true, uid: user.uid, username: user.displayName || '', email: user.email || '', photoURL: user.photoURL || '' }),
     signOut: () => {
         set({ isSignedIn: false, uid: '', username: '', email: ''})
         signOutUser();
@@ -29,6 +32,7 @@ const UseUserStore = create<User>((set) => ({
     setUid: (uid: string) => set({ uid: uid }),
     setUsername: (username: string) => set({ username: username }),
     setEmail: (email: string) => set({ email: email }),
+    setPhoto: (photoURL: string) => set({ photoURL: photoURL }),
 }));
 
 export default UseUserStore;

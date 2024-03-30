@@ -11,7 +11,6 @@ type Profile = {
     setBlocks: (blocks: Profile['blocks']) => void;
 }
 
-
 const UseProfileStore = create<Profile>((set) => ({
     blocks: {} as Profile['blocks'],
 

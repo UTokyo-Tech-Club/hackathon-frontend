@@ -55,15 +55,16 @@ const Post: React.FC = () => {
                         </Toolbar>
                     </AppBar>
 
-                    {/* Editor */}
+                    {/* Post Tweet */}
                     <Stack>
                         <Stack direction='row' sx={{ m: 1, p: 1, minHeight: "40vh" }}>
                             <Avatar sx={{ width: 32, height: 32, m: 1}}>
                                 <PersonIcon />
                             </Avatar>
+                            {/* Editor */}
                             <Editor />
-                            {/* Footer */}
                         </Stack>
+                        {/* Footer */}
                         <Divider variant="middle" />
                         <BottomNavigation>
                             <Container sx={{ display: "flex", justifyContent: "right" }}>

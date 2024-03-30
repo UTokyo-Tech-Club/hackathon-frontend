@@ -2,11 +2,11 @@ import UseUserStore from '../../stores/User';
 import UseAppStore from '../../stores/App';
 import { signInWithGoogle } from '../../firebase/auth';
 import Edit from './Edit';
+import GradientCircularProgress from '../decorations/progress/Circular';
 
 // MUI
 import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
-import PersonIcon from '@mui/icons-material/Person';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
@@ -18,7 +18,7 @@ import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 
 const Profile = () => {
 
-    const { isSignedIn, username, email, signOut } = UseUserStore();
+    const { isSignedIn, username, email, photoURL, signOut } = UseUserStore();
     const { isProfileSettingsOpen, profileSettingsAnchor, toggleProfileSettings, closeProfileSettings, setProfileSettingsAnchor, openEditProfile } = UseAppStore();
     
     const handleProfileSettings = (event: React.MouseEvent<HTMLElement>) => {
@@ -32,7 +32,11 @@ const Profile = () => {
             <Tooltip title={username}> 
                 <IconButton onClick={handleProfileSettings}>
                     <Avatar>
-                        <PersonIcon />
+                        {photoURL ? 
+                            <img src={photoURL} alt={username} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> 
+                            : 
+                            <GradientCircularProgress />
+                        }
                     </Avatar>
                 </IconButton>
             </Tooltip>
@@ -46,7 +50,7 @@ const Profile = () => {
                                 <Stack>
                                     <Stack direction="row">
                                         <Avatar>
-                                            <PersonIcon />
+                                        <img src={photoURL} alt={username} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                         </Avatar>
                                         <Stack>
                                             <Typography variant="body2">
@@ -58,10 +62,10 @@ const Profile = () => {
                                         </Stack>
                                     </Stack>
                                     <Container>
-                                        <Button onClick={openEditProfile}>
+                                        <Button variant="outlined" onClick={openEditProfile}>
                                             Edit
                                         </Button>
-                                        <Button onClick={signOut}>
+                                        <Button variant="outlined" onClick={signOut}>
                                             Sign Out
                                         </Button>
                                     </Container>

@@ -16,12 +16,14 @@ import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
 import { Stack } from "@mui/material";
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export default function App() {
 
   log.setLevel(log.levels.DEBUG);
 
-  const { currentContent, openNewTweet} = UseAppStore();
+  const { currentContent, openNewTweet, isSnackOpen, snackMessage, snakcSeverity, openSnack, closeSnack} = UseAppStore();
   const { signIn } = UseUserStore();
 
   const wsCtx = useContext(WebSocketContext);
@@ -37,6 +39,8 @@ export default function App() {
 
           log.info("Frontend signed in as ", user.uid);
           sendMessage(JSON.stringify({ type: 'user', action: "auth", data: JSON.stringify({ token: await getToken() }) }));
+
+          openSnack("Wellcome " + user.displayName, "success");
         } else {
             log.warn("No user is signed in")
         }
@@ -71,6 +75,13 @@ export default function App() {
 
       {/* Footer */}
       <Copyright />
+
+      {/* Snackbar */}
+      <Snackbar open={isSnackOpen} autoHideDuration={3000} onClose={closeSnack}>
+        <Alert onClose={closeSnack} severity={snakcSeverity}>
+          {snackMessage}
+        </Alert>
+      </Snackbar>
     </>
   )
 }

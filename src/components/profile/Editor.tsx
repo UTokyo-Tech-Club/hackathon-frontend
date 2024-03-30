@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import EditorJS, { EditorConfig, BlockToolConstructable } from '@editorjs/editorjs';
 import { v4 as uuidv4 } from 'uuid';
 import log from 'loglevel';
-import UsePostStore from '../../stores/Post';
+import UseProfileStore from '../../stores/Profile';
+
 //@ts-ignore
 import Header from "@editorjs/header";
 //@ts-ignore
@@ -61,7 +62,7 @@ const Editor: React.FC = () => {
 
     const uid = uuidv4();
 
-    const { setBlocks } = UsePostStore();
+    const { setBlocks } = UseProfileStore();
 
     useEffect(() => {
         if (!ejInstance.current) {
@@ -149,7 +150,7 @@ const Editor: React.FC = () => {
     }, []);
 
     const style = {
-        width: '100%',
+        width: '93%',
     }
 
     return <div id={uid} style={style}></div>;
