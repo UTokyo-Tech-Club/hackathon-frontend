@@ -128,7 +128,6 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
                     },
                 },
                 onReady: () => {
-                    log.info('Editor.js is ready to use!');
                 },
                 onChange: async () => {
                     if (ejInstance.current) {

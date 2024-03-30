@@ -10,7 +10,7 @@ import UseUserStore from './stores/User';
 import Post from "./components/post";
 import { WebSocketContext } from './websocket/websocket';
 import Copyright from "./components/decorations/copyright";
-import { PushResponse } from "./websocket/model";
+import { PushResponse, PushSchema } from "./websocket/model";
 
 // MUI
 import Container from '@mui/material/Container';
@@ -37,20 +37,22 @@ export default function App() {
     const unsubscribe = authApp.onAuthStateChanged(async (user) => {
         if (user) {
           try {
-            const result = await sendWS(
+            const result = await sendWS<PushResponse>(
               JSON.stringify({ 
-                type: 'user', 
+                type: "user", 
                 action: "auth", 
-                data: 
-                JSON.stringify({ token: await getToken() })}), null) as unknown as PushResponse;
-            if (result.error !== "null") return
+                data: JSON.stringify({ token: await getToken() })}),
+                PushSchema) as PushResponse;
+            if (result.error !== "null") throw new Error(result.error);
           } catch (error) {
-            log.error("Error sending to backend: ", error);
+            log.error("Error sending auth to backend: ", error);
+            openSnack("Failed to Sign In", "error");
+            return;
           }
 
           signIn(user as any);
           log.info("Front & backend signed in as ", user.uid);
-          openSnack("Wellcome " + user.displayName, "success");
+          openSnack("Wellcome " + user.displayName + "!", "success");
         } else {
             log.warn("No user is signed in")
         }

@@ -3,6 +3,7 @@ import Editor from './Editor';
 import { WebSocketContext } from '../../websocket/websocket';
 import { useContext } from 'react';
 import UsePostStore from '../../stores/Post';
+import log from 'loglevel';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
@@ -21,6 +22,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Paper from '@mui/material/Paper';
+import { PushResponse, PushSchema } from '../../websocket/model';
 
 const Post: React.FC = () => {
 
@@ -28,14 +30,29 @@ const Post: React.FC = () => {
     if (!wsCtx) {
         throw new Error('Context not found');
     }
-    const { sendMessage } = wsCtx;
+    const { sendWS } = wsCtx;
 
-    const { isNewTweetOpen, closeNewTweet } = UseAppStore();
+    const { isNewTweetOpen, closeNewTweet, openSnack } = UseAppStore();
 
     const { blocks } = UsePostStore();
 
-    const handPublish = () => {
-        sendMessage(JSON.stringify({ type: 'tweet', action: 'post', data: JSON.stringify(blocks) }));
+    const handPublish = async () => {
+
+        try {
+            const result = await sendWS<PushResponse>(
+                JSON.stringify({ 
+                    type: "tweet", 
+                    action: "post", 
+                    data: JSON.stringify(blocks)}),
+                    PushSchema) as PushResponse;
+            if (result.error !== "null") throw new Error(result.error);
+        } catch (error) {
+            log.error("Error sending auth to backend: ", error);
+            openSnack("Failed to Sign In", "error");
+            return;
+        }
+
+        openSnack("Posted New Tweet!", "success");
         closeNewTweet();
     }
 

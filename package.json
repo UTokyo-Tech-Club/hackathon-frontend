@@ -35,6 +35,7 @@
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
     "@types/uuid": "^9.0.8",
+    "ajv": "^8.12.0",
     "editorjs-text-alignment-blocktune": "^1.0.3",
     "firebase": "^10.9.0",
     "loglevel": "^1.9.1",

@@ -1,12 +1,11 @@
-import { createContext, ReactNode, useState, useRef, useEffect } from 'react';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { createContext, ReactNode, useEffect } from 'react';
 import log from 'loglevel';
-import Ajv from 'ajv';
+import { JSONSchemaType } from "ajv";
+import { Validate } from './model';
 
-import { PushResponse } from './model';
 
 interface WebSocketContextType {
-    sendWS: (message: string, expectedResponse: any ) => void;
+    sendWS: <T>(message: string, schema: JSONSchemaType<any>) => Promise<T>;
 }
 
 export const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined);
@@ -18,13 +17,18 @@ export const WebSocketProvider = ({ children }: {children: ReactNode}) => {
     ws.onopen = () => { log.info('WebSocket connection established'); };
     ws.onclose = () => { log.warn('WebSocket connection closed'); };
     
-    async function sendWS(message: string, expectedResponse: any) {
-
+    async function sendWS<T>(message: string, schema: JSONSchemaType<any>): Promise<T> {
         return new Promise((resolve, reject) => {
             ws.send(message);
             ws.onmessage = (event) => {
-                const response = JSON.parse(event.data) as PushResponse;
-                resolve(response);
+                try {
+                    const response = JSON.parse(event.data);
+                    if (Validate(schema, response)) {
+                        resolve(response as T);
+                    }
+                } catch(error) {
+                    reject(new Error('Failed to parse response: ' + error));
+                }
             };
             ws.onerror = (event) => {
                 reject(new Error('WebSocket error: ' + event))
