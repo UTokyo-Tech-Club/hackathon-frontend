@@ -2,18 +2,18 @@ import { create } from 'zustand';
 
 type Profile = {
     content: string;
-    processing: boolean;
+    isProcessing: boolean;
 
     setContent: (content: string) => void;
-    setProcessing: (processing: boolean) => void;
+    setIsProcessing: (processing: boolean) => void;
 }
 
 const UseProfileStore = create<Profile>((set) => ({
     content: '',
-    processing: false,
+    isProcessing: false,
 
     setContent: (content) => set({ content: content }),
-    setProcessing: (processing) => set({ processing: processing })
+    setIsProcessing: (processing) => set({ isProcessing: processing })
 }));
 
 export default UseProfileStore;

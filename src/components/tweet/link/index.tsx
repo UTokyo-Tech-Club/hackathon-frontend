@@ -1,4 +1,4 @@
-import { TweetInterface } from "../../interfaces/Tweet";
+import { TweetInterface } from "../../../interfaces/Tweet";
 
 // MUI
 import Typography from '@mui/material/Typography';

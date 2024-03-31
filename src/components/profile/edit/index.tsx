@@ -27,7 +27,7 @@ const Edit: React.FC = () => {
     const { sendWS } = wsCtx;
 
     const { isEditProfileOpen, closeEditProfile, openSnack } = UseAppStore();
-    const { content, setContent, setProcessing } = UseProfileStore();
+    const { content, setContent, setIsProcessing: setProcessing } = UseProfileStore();
     const { photoURL, username } = UseUserStore();
 
     const updateFirebaseProfile = async () => {

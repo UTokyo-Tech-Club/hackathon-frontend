@@ -7,7 +7,7 @@ import Feed from './components/feed';
 import UseAppStore from './stores/App';
 import Profile from './components/profile';
 import UseUserStore from './stores/User';
-import Post from "./components/post";
+import Post from "./components/tweet/post";
 import { WebSocketContext } from './websocket/websocket';
 import Copyright from "./components/decorations/copyright";
 import { PingResponse, PingSchema, PushResponse, PushSchema } from "./websocket/model";

@@ -1,7 +1,8 @@
 import React from 'react';
 import { TweetInterface } from "../../interfaces/Tweet";
 import Content from './Content';
-import Link from './Link';
+import Link from './link';
+import Metadata from './Metadata';
 
 // MUI
 import Box from '@mui/material/Box';
@@ -9,14 +10,7 @@ import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Button';
 import PersonIcon from '@mui/icons-material/Person';
 import Typography from '@mui/material/Typography';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import Stack from '@mui/material/Stack';
-import AddCommentIcon from '@mui/icons-material/AddComment';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ImportExportIcon from '@mui/icons-material/ImportExport';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 
@@ -74,42 +68,7 @@ const Tweet: React.FC<{tweet: TweetInterface;}> = ({ tweet }) => {
                     </Stack>
 
                     {/* Metadata */}
-                    <Stack>
-                        <Button sx={{ mt: 1 }}>
-                            {tweet.bookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-                        </Button>
-
-                        <Stack height="100%" justifyContent="space-around">
-                            <Button>
-                                <Stack>
-                                    {tweet.liked ? <FavoriteIcon />: <FavoriteBorderIcon />} 
-                                    <Typography variant="body2">4</Typography>
-                                </Stack>
-                            </Button>
-
-                            <Button>
-                                <Stack>
-                                    <AddCommentIcon />
-                                    <Typography variant="body2">4</Typography>
-                                </Stack>
-                            </Button>
-
-                            <Button>
-                                <Stack>
-                                    <ImportExportIcon />
-                                    <Typography variant="body2">4</Typography>
-                                </Stack>
-                            </Button>
-
-                            <Button>
-                                <Stack>
-                                    <VisibilityIcon />
-                                    <Typography variant="body2">4</Typography>
-                                </Stack>
-                            </Button>
-                        </Stack>
-
-                    </Stack>
+                    <Metadata />
                 </Stack>
 
                 {/* Links */}

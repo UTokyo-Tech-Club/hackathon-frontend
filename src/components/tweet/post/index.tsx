@@ -1,10 +1,10 @@
-import UseAppStore from '../../stores/App';
+import UseAppStore from '../../../stores/App';
 import Editor from './Editor';
-import { WebSocketContext } from '../../websocket/websocket';
+import { WebSocketContext } from '../../../websocket/websocket';
 import { useContext, useEffect, useState } from 'react';
-import UsePostStore from '../../stores/Post';
+import UsePostStore from '../../../stores/Post';
 import log from 'loglevel';
-import UseUserStore from '../../stores/User';
+import UseUserStore from '../../../stores/User';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
@@ -22,7 +22,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Paper from '@mui/material/Paper';
-import { PushResponse, PushSchema } from '../../websocket/model';
+import { PushResponse, PushSchema } from '../../../websocket/model';
 
 const Post: React.FC = () => {
     const wsCtx = useContext(WebSocketContext);
@@ -37,11 +37,15 @@ const Post: React.FC = () => {
 
     const { username, photoURL } = UseUserStore();
 
-    const { blocks } = UsePostStore();
+    const { content } = UsePostStore();
 
     useEffect(() => {
-        setIsContentValid(blocks.length > 0);
-    }, [blocks]);
+        if (!content) return;
+
+        setIsContentValid(JSON.parse(content)['blocks'].length > 0);
+        // console.log(content);
+        // setIsContentValid(true)
+    }, [content]);
 
     const handPublish = async () => {
 
@@ -50,7 +54,7 @@ const Post: React.FC = () => {
                 JSON.stringify({ 
                     type: "tweet", 
                     action: "post", 
-                    data: JSON.stringify(blocks)}),
+                    data: content}),
                     PushSchema) as PushResponse;
             if (result.error !== "null") throw new Error(result.error);
         } catch (error) {

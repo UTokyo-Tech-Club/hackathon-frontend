@@ -16,7 +16,7 @@ interface AppbarProps {
 
 const Appbar: React.FC<AppbarProps> = ({ handleClose, handleSave }) => {
 
-    const { processing } = UseProfileStore();
+    const { isProcessing: processing } = UseProfileStore();
     
     return (
         <AppBar position="sticky" color="inherit">

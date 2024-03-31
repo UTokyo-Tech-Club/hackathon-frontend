@@ -18,7 +18,7 @@ const SidebarPopup: React.FC = () => {
 
     const { isSignedIn, username, email, photoURL, signOut } = UseUserStore();
     const { isProfileSettingsOpen, profileSettingsAnchor, closeProfileSettings, openEditProfile } = UseAppStore();
-    const { processing } = UseProfileStore();
+    const { isProcessing: processing } = UseProfileStore();
 
     return (
         <BasePopup open={isProfileSettingsOpen} anchor={profileSettingsAnchor} placement='top-end'>
