@@ -14,9 +14,7 @@ const Editor: React.FC = () => {
     const { content, setContent } = UseProfileStore();
 
     useEffect(() => {
-        if (ejInstance.current) {
-            return;
-        }
+        if (ejInstance.current) return;
 
         const editorConfig: EditorConfig = {
             holder: uid,

@@ -5,21 +5,14 @@ import { useContext, useEffect, useState } from 'react';
 import UsePostStore from '../../../stores/Post';
 import log from 'loglevel';
 import UseUserStore from '../../../stores/User';
+import Header from './Header';
+import Footer from './Footer';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import Container from '@mui/material/Container';
-import BottomNavigation from '@mui/material/BottomNavigation';
 import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import { PushResponse, PushSchema } from '../../../websocket/model';
@@ -37,7 +30,7 @@ const Post: React.FC = () => {
 
     const { username, photoURL } = UseUserStore();
 
-    const { content } = UsePostStore();
+    const { content, setIsProcessing } = UsePostStore();
 
     useEffect(() => {
         if (!content) return;
@@ -47,41 +40,42 @@ const Post: React.FC = () => {
         // setIsContentValid(true)
     }, [content]);
 
-    const handPublish = async () => {
+    const handlePublish = () => {
+        setIsProcessing(true);
 
-        try {
-            const result = await sendWS<PushResponse>(
-                JSON.stringify({ 
-                    type: "tweet", 
-                    action: "post", 
-                    data: content}),
-                    PushSchema) as PushResponse;
-            if (result.error !== "null") throw new Error(result.error);
-        } catch (error) {
-            log.error("Error sending auth to backend: ", error);
-            openSnack("Failed to Sign In", "error");
-            return;
-        }
+        sendWS<PushResponse>(
+            JSON.stringify({ 
+                type: "tweet", 
+                action: "post", 
+                data: content}),
+                PushSchema)
+            .then((result) => {
+                if (result.error !== "null") throw new Error(result.error);
+                handleClose();
+            })
+            .catch((error) => {
+                log.error("Error sending tweet to backend: ", error);
+                openSnack("Failed to Post", "error");
+                return;
+            })
+            .finally(() => {
+                setIsProcessing(false);
+            });
 
         openSnack("Posted New Tweet!", "success");
         closeNewTweet();
     }
 
+    const handleClose = () => {
+        closeNewTweet()
+    }
+
     return (
         <Dialog open={isNewTweetOpen} fullWidth sx={{ maxHeight: "80vh" }}>
-            <ClickAwayListener onClickAway={closeNewTweet}>
+            <ClickAwayListener onClickAway={handleClose}>
                 <Paper>
                     {/* Header */}
-                    <AppBar position="sticky" color="inherit">
-                        <Toolbar>
-                            <IconButton edge="end" color="inherit" onClick={closeNewTweet}>
-                                <CloseIcon />
-                            </IconButton>
-                            <Typography variant="body1" sx={{ ml: 3 }}>
-                                新規投稿
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
+                    <Header handleClose={handleClose}/>
 
                     {/* Post Tweet */}
                     <Stack>
@@ -92,16 +86,11 @@ const Post: React.FC = () => {
                             {/* Editor */}
                             <Editor />
                         </Stack>
+
                         {/* Footer */}
                         <Divider variant="middle" />
-                        <BottomNavigation>
-                            <Container sx={{ display: "flex", justifyContent: "right" }}>
-                                <Button disabled={!isContentValid} variant="contained" sx={{ m: 1, p: 2, py: 2.5 }} onClick={handPublish}>
-                                    投稿
-                                    <ArrowForwardIcon />
-                                </Button>
-                            </Container>
-                        </BottomNavigation>
+                        <Footer isContentValid={isContentValid} handlePublish={handlePublish}/>
+
                     </Stack>
                 </Paper>
             </ClickAwayListener>

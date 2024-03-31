@@ -63,22 +63,21 @@ export default function App() {
 
   useEffect(() => {
     const pingWS = () => {
-      const user = authApp.currentUser
-      if (user) {
-        sendWS<PingResponse>(
-          JSON.stringify({ 
-            type: "sys", 
-            action: "ping", 
-            data: JSON.stringify({ token: getToken() })}),
-          PingSchema)
-          .then((result) => {
-            if (result.response !== "pong") throw new Error(result.response);
-          })
-          .catch((error) => {
-            log.error("Error sending ping to backend: ", error);
-            openSnack("Server Disconnected...", "error");
-          });
-      }
+      if (!authApp.currentUser) return;
+
+      sendWS<PingResponse>(
+        JSON.stringify({ 
+          type: "sys", 
+          action: "ping", 
+          data: JSON.stringify({ token: getToken() })}),
+        PingSchema)
+        .then((result) => {
+          if (result.response !== "pong") throw new Error(result.response);
+        })
+        .catch((error) => {
+          log.error("Error sending ping to backend: ", error);
+          openSnack("Server Disconnected...", "error");
+        });
     };
     const intervalId = setInterval(pingWS, 20000);
     return () => clearInterval(intervalId);
