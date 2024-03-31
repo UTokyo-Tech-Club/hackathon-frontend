@@ -13,6 +13,20 @@ const PushSchema: JSONSchemaType<PushResponse> = {
     additionalProperties: false
 };
 
+
+interface PingResponse {
+    response: string;
+}
+
+const PingSchema: JSONSchemaType<PingResponse> = {
+    type: "object",
+    properties: {
+        response: { type: "string" },
+    },
+    required: ["response"],
+    additionalProperties: false
+};
+
 function Validate(schema: JSONSchemaType<any>, data: any): boolean {
     const ajv = new Ajv();
     const validate = ajv.compile(schema);
@@ -23,5 +37,5 @@ function Validate(schema: JSONSchemaType<any>, data: any): boolean {
     return true
 }
 
-export { Validate, PushSchema }
-export type { PushResponse};
+export { Validate, PushSchema, PingSchema }
+export type { PushResponse, PingResponse };

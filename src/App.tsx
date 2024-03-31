@@ -10,7 +10,7 @@ import UseUserStore from './stores/User';
 import Post from "./components/post";
 import { WebSocketContext } from './websocket/websocket';
 import Copyright from "./components/decorations/copyright";
-import { PushResponse, PushSchema } from "./websocket/model";
+import { PingResponse, PingSchema, PushResponse, PushSchema } from "./websocket/model";
 
 // MUI
 import Container from '@mui/material/Container';
@@ -59,6 +59,29 @@ export default function App() {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const pingWS = () => {
+      const user = authApp.currentUser
+      if (user) {
+        sendWS<PingResponse>(
+          JSON.stringify({ 
+            type: "sys", 
+            action: "ping", 
+            data: JSON.stringify({ token: getToken() })}),
+          PingSchema)
+          .then((result) => {
+            if (result.response !== "pong") throw new Error(result.response);
+          })
+          .catch((error) => {
+            log.error("Error sending ping to backend: ", error);
+            openSnack("Server Disconnected...", "error");
+          });
+      }
+    };
+    const intervalId = setInterval(pingWS, 20000); // 20000 milliseconds = 20 seconds
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
