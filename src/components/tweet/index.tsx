@@ -39,6 +39,7 @@ const DEFAULT_INITIAL_DATA = {
 };
 
 const Tweet: React.FC<{tweet: TweetInterface;}> = ({ tweet }) => {
+    console.log(tweet)
     return (
         <Paper elevation={1} sx={{ my: 2 }}>
             <Stack>
