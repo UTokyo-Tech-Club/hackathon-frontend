@@ -125,7 +125,6 @@ const Editor: React.FC = () => {
                     if (ejInstance.current) {
                         let saved = await ejInstance.current.save();
                         setBlocks(saved['blocks'])
-                        log.info('Saved data:', saved['blocks'])
                         return
                     }
                     log.error('Editor.js instance is not available')

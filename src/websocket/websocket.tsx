@@ -53,14 +53,13 @@
 //     );
 // };
 
-import React, { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode } from 'react';
 import log from 'loglevel';
-import { JSONSchemaType } from "ajv";
 import { Validate } from './model';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
+import useWebSocket from 'react-use-websocket';
 
 interface WebSocketContextType {
-    sendWS: <T>(message: string, schema: JSONSchemaType<any>) => Promise<T>;
+    sendWS: <T>(message: string, schema: any) => Promise<T>;
 }
 
 export const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined);
@@ -70,13 +69,13 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const WS_URL = import.meta.env.VITE_WS_URI;
 
     // Custom hook to send and receive WebSocket messages
-    const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(WS_URL, {
+    const { sendMessage, getWebSocket } = useWebSocket(WS_URL, {
         onOpen: () => log.info('WebSocket connection established'),
         onClose: () => log.warn('WebSocket connection closed'),
-        shouldReconnect: (closeEvent) => true, // Automatically reconnect on close
+        // shouldReconnect: (closeEvent) => true, // Automatically reconnect on close
     });
 
-    async function sendWS<T>(message: string, schema: JSONSchemaType<any>): Promise<T> {
+    async function sendWS<T>(message: string, schema: any): Promise<T> {
         return new Promise((resolve, reject) => {
             sendMessage(message);
 

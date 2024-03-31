@@ -68,6 +68,7 @@ const Feed = () => {
                 <Tweet key={index} tweet={item} />
             ))}
 
+            
             <CircularProgress ref={loaderRef} sx={{ alignSelf: "center" }} />
         </Container>
     );

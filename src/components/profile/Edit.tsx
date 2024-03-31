@@ -13,19 +13,17 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import PersonIcon from '@mui/icons-material/Person';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Container from '@mui/material/Container';
-import BottomNavigation from '@mui/material/BottomNavigation';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import UseUserStore from '../../stores/User';
+import { PushResponse, PushSchema } from '../../websocket/model';
 
 const Edit: React.FC = () => {
 
@@ -59,16 +57,19 @@ const Edit: React.FC = () => {
 
         const updateBackendProfile = async () => {
             try {
-                await sendWS("push", JSON.stringify({ 
-                    type: 'user', 
-                    action: 'edit', 
-                    data: { 
-                        username: username, 
-                        photoURL: photoURL, 
-                        bio: JSON.stringify(blocks) 
-                    }}));
+                const result = await sendWS<PushResponse>(
+                    JSON.stringify({ 
+                        type: "user", 
+                        action: "edit", 
+                        data: JSON.stringify({ 
+                            username: username, 
+                            photoURL: photoURL, 
+                            bio: blocks 
+                        })}),
+                        PushSchema) as PushResponse;
+                if (result.error !== "null") throw new Error(result.error);
             } catch (error) {
-                log.error("Error sending message: ", error)
+                log.error("Error sending edit message: ", error)
             }
         }
 

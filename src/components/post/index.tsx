@@ -1,9 +1,10 @@
 import UseAppStore from '../../stores/App';
 import Editor from './Editor';
 import { WebSocketContext } from '../../websocket/websocket';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UsePostStore from '../../stores/Post';
 import log from 'loglevel';
+import UseUserStore from '../../stores/User';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
@@ -11,7 +12,6 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import PersonIcon from '@mui/icons-material/Person';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -25,16 +25,23 @@ import Paper from '@mui/material/Paper';
 import { PushResponse, PushSchema } from '../../websocket/model';
 
 const Post: React.FC = () => {
-
     const wsCtx = useContext(WebSocketContext);
     if (!wsCtx) {
         throw new Error('Context not found');
     }
     const { sendWS } = wsCtx;
 
+    const [isContentValid, setIsContentValid] = useState<boolean>(false);
+
     const { isNewTweetOpen, closeNewTweet, openSnack } = UseAppStore();
 
+    const { username, photoURL } = UseUserStore();
+
     const { blocks } = UsePostStore();
+
+    useEffect(() => {
+        setIsContentValid(blocks.length > 0);
+    }, [blocks]);
 
     const handPublish = async () => {
 
@@ -75,8 +82,8 @@ const Post: React.FC = () => {
                     {/* Post Tweet */}
                     <Stack>
                         <Stack direction='row' sx={{ m: 1, p: 1, minHeight: "40vh" }}>
-                            <Avatar sx={{ width: 32, height: 32, m: 1}}>
-                                <PersonIcon />
+                            <Avatar sx={{ width: 32, height: 32, m: 1, mr: 2}}>
+                                <img src={photoURL} alt={username} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> 
                             </Avatar>
                             {/* Editor */}
                             <Editor />
@@ -85,7 +92,7 @@ const Post: React.FC = () => {
                         <Divider variant="middle" />
                         <BottomNavigation>
                             <Container sx={{ display: "flex", justifyContent: "right" }}>
-                                <Button variant="contained" sx={{ m: 1, p: 2, py: 2.5 }} onClick={handPublish}>
+                                <Button disabled={!isContentValid} variant="contained" sx={{ m: 1, p: 2, py: 2.5 }} onClick={handPublish}>
                                     投稿
                                     <ArrowForwardIcon />
                                 </Button>
