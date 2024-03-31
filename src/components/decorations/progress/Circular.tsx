@@ -14,7 +14,7 @@ const GradientCircularProgress = () => {
                 </linearGradient>
             </defs>
             </svg>
-            <CircularProgress sx={{ 'svg circle': { stroke: 'url(#my_gradient)' } }} />
+            <CircularProgress sx={{ 'svg circle': { stroke: 'url(#my_gradient)' }, m: 2 }} />
         </React.Fragment>
     );
 }

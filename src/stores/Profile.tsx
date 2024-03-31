@@ -1,20 +1,15 @@
 import { create } from 'zustand';
 
 type Profile = {
-    blocks: {
-        type: string;
-        data: {
-            text: string;
-        };
-    }[];
-    
-    setBlocks: (blocks: Profile['blocks']) => void;
+    content: string;
+
+    setContent: (content: string) => void;
 }
 
 const UseProfileStore = create<Profile>((set) => ({
-    blocks: {} as Profile['blocks'],
+    content: '',
 
-    setBlocks: (blocks) => set({ blocks })
+    setContent: (content) => set({ content: content })
 }));
 
 export default UseProfileStore;
