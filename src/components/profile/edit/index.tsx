@@ -27,7 +27,7 @@ const Edit: React.FC = () => {
     const { sendWS } = wsCtx;
 
     const { isEditProfileOpen, closeEditProfile, openSnack } = UseAppStore();
-    const { content, setContent } = UseProfileStore();
+    const { content, setContent, setProcessing } = UseProfileStore();
     const { photoURL, username } = UseUserStore();
 
     const updateFirebaseProfile = async () => {
@@ -68,6 +68,7 @@ const Edit: React.FC = () => {
     }
 
     const handleSave = async () => {
+        setProcessing(true);
         Promise.all([updateFirebaseProfile(), updateBackendProfile()])
             .then(() => {
                 handleClose();
@@ -76,12 +77,16 @@ const Edit: React.FC = () => {
             .catch((error) => {
                 openSnack("Please Retry...", "error");
                 log.error("Error updating profile: ", error)
+            })
+            .finally(() => {
+                setProcessing(false);
             });
     }
 
     useEffect(() => {
         if (!isEditProfileOpen || content) return;
 
+        setProcessing(true);
         sendWS<ProfileContentResponse>(
             JSON.stringify({ 
                 type: "user", 
@@ -90,6 +95,7 @@ const Edit: React.FC = () => {
             .then((result) => {
                 if (result.error !== "null") throw new Error(result.error);
                 setContent(result.content)
+                setProcessing(false);
             })
             .catch((error) => {
                 log.error("Error getting profile content: ", error);

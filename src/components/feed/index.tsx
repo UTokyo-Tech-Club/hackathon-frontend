@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import UseFeedStore from "../../stores/Feed";
 import { TweetInterface, TweetData } from "../../interfaces/Tweet";
-import log from 'loglevel';
 import Tweet from "../tweet";
 import CircularProgress from '@mui/material/CircularProgress';
 

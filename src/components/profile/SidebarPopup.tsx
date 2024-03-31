@@ -1,5 +1,6 @@
 import UseUserStore from '../../stores/User';
 import UseAppStore from '../../stores/App';
+import UseProfileStore from '../../stores/Profile';
 import { signInWithGoogle } from '../../firebase/auth';
 
 // MUI
@@ -11,11 +12,13 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-const SidebarPopup = () => {
+const SidebarPopup: React.FC = () => {
 
     const { isSignedIn, username, email, photoURL, signOut } = UseUserStore();
     const { isProfileSettingsOpen, profileSettingsAnchor, closeProfileSettings, openEditProfile } = UseAppStore();
+    const { processing } = UseProfileStore();
 
     return (
         <BasePopup open={isProfileSettingsOpen} anchor={profileSettingsAnchor} placement='top-end'>
@@ -38,9 +41,9 @@ const SidebarPopup = () => {
                                     </Stack>
                                 </Stack>
                                 <Container>
-                                    <Button variant="outlined" onClick={openEditProfile}>
+                                    <LoadingButton loading={processing} variant="outlined" onClick={openEditProfile}>
                                         Edit
-                                    </Button>
+                                    </LoadingButton>
                                     <Button variant="outlined" onClick={signOut}>
                                         Sign Out
                                     </Button>
