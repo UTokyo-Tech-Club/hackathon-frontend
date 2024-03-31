@@ -1,5 +1,16 @@
 import Ajv, { JSONSchemaType } from "ajv";
 
+function Validate(schema: JSONSchemaType<any>, data: any): boolean {
+    const ajv = new Ajv();
+    const validate = ajv.compile(schema);
+    const valid = validate(data);
+    if (!valid) {
+        throw new Error(`Validation failed: ${validate.errors}`);
+    }
+    return true
+}
+
+
 interface PushResponse {
     error: string;
 }
@@ -27,15 +38,22 @@ const PingSchema: JSONSchemaType<PingResponse> = {
     additionalProperties: false
 };
 
-function Validate(schema: JSONSchemaType<any>, data: any): boolean {
-    const ajv = new Ajv();
-    const validate = ajv.compile(schema);
-    const valid = validate(data);
-    if (!valid) {
-        throw new Error(`Validation failed: ${validate.errors}`);
-    }
-    return true
+
+interface ProfileContentResponse {
+    content: string;
+    error: string;
 }
 
-export { Validate, PushSchema, PingSchema }
-export type { PushResponse, PingResponse };
+const ProfileContentSchema: JSONSchemaType<ProfileContentResponse> = {
+    type: "object",
+    properties: {
+        content: { type: "string" }, // Fix the type of the content property
+        error: { type: "string" },
+    },
+    required: ["content", "error"],
+    additionalProperties: false
+};
+
+
+export { Validate, PushSchema, PingSchema, ProfileContentSchema }
+export type { PushResponse, PingResponse, ProfileContentResponse };

@@ -80,7 +80,7 @@ export default function App() {
           });
       }
     };
-    const intervalId = setInterval(pingWS, 20000); // 20000 milliseconds = 20 seconds
+    const intervalId = setInterval(pingWS, 20000);
     return () => clearInterval(intervalId);
   }, []);
 

@@ -1,8 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import EditorJS, { EditorConfig, BlockToolConstructable } from '@editorjs/editorjs';
 import { v4 as uuidv4 } from 'uuid';
 import log from 'loglevel';
 import UseProfileStore from '../../stores/Profile';
+import { ProfileContentResponse, ProfileContentSchema } from '../../websocket/model';
+import { WebSocketContext } from '../../websocket/websocket';
+import UseAppStore from '../../stores/App';
 
 //@ts-ignore
 import Header from "@editorjs/header";
@@ -57,12 +60,30 @@ const DEFAULT_INITIAL_DATA = {
     ],
 };
 
+interface Data {
+    blocks: {
+        id: string;
+        type: string;
+        data: {
+            text: string;
+        };
+    }[];
+}
+
 const Editor: React.FC = () => {
     const ejInstance = useRef<EditorJS | null>(null);
 
     const uid = uuidv4();
 
     const { setBlocks } = UseProfileStore();
+
+    const { openSnack } = UseAppStore();
+
+    const wsCtx = useContext(WebSocketContext);
+    if (!wsCtx) {
+        throw new Error('Context not found');
+    }
+    const { sendWS } = wsCtx;
 
     useEffect(() => {
         if (!ejInstance.current) {
@@ -118,19 +139,32 @@ const Editor: React.FC = () => {
                             },
                         }, 
                     },
+
                 },
                 onReady: () => {
+                    sendWS<ProfileContentResponse>(
+                        JSON.stringify({ 
+                            type: "user", 
+                            action: "get_profile_content"}),
+                            ProfileContentSchema)
+                        .then((result) => {
+                            if (result.error !== "null") throw new Error(result.error);
+                            ejInstance.current?.blocks.insertMany(JSON.parse(result.content));
+                        })
+                        .catch((error) => {
+                            log.error("Error getting profile content: ", error);
+                            openSnack("Error Getting Profile", "error");
+                        });
                 },
                 onChange: async () => {
                     if (ejInstance.current) {
                         let saved = await ejInstance.current.save();
-                        setBlocks(saved['blocks'])
-                        return
+                        setBlocks(saved['blocks']);
+                        return;
                     }
-                    log.error('Editor.js instance is not available')
+                    log.error('Editor.js instance is not available');
                 },
 
-                data: DEFAULT_INITIAL_DATA
             };
 
             const editor = new EditorJS(editorConfig);
@@ -149,7 +183,7 @@ const Editor: React.FC = () => {
 
     const style = {
         width: '93%',
-    }
+    };
 
     return <div id={uid} style={style}></div>;
 };

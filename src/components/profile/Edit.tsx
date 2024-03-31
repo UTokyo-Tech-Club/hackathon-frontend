@@ -1,11 +1,12 @@
 import UseAppStore from '../../stores/App';
 import { WebSocketContext } from '../../websocket/websocket';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import UseProfileStore from '../../stores/Profile';
 import Editor from './Editor';
 import { authApp } from '../../firebase/config';
 import { updateProfile } from "firebase/auth";
 import log from 'loglevel';
+import { useState } from 'react';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
@@ -23,9 +24,11 @@ import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import UseUserStore from '../../stores/User';
-import { PushResponse, PushSchema } from '../../websocket/model';
+import { ProfileContentResponse, ProfileContentSchema, PushResponse, PushSchema } from '../../websocket/model';
 
 const Edit: React.FC = () => {
+
+    const minUsernameLength = 3;
 
     const wsCtx = useContext(WebSocketContext);
     if (!wsCtx) {
@@ -35,9 +38,10 @@ const Edit: React.FC = () => {
 
     const { isEditProfileOpen, closeEditProfile, openSnack } = UseAppStore();
 
-    const { blocks } = UseProfileStore();
+    const { blocks, setBlocks } = UseProfileStore();
 
     const { photoURL, username, email, setUsername } = UseUserStore();
+
 
     const handleSave = async () => {
 
@@ -64,7 +68,7 @@ const Edit: React.FC = () => {
                         data: JSON.stringify({ 
                             username: username, 
                             photoURL: photoURL, 
-                            bio: blocks 
+                            profileContent: JSON.stringify(blocks)
                         })}),
                         PushSchema) as PushResponse;
                 if (result.error !== "null") throw new Error(result.error);
@@ -84,7 +88,7 @@ const Edit: React.FC = () => {
             });
     }
 
-    const minUsernameLength = 3;
+
 
     return (
         <Dialog open={isEditProfileOpen} fullWidth sx={{ maxHeight: "90vh" }}>

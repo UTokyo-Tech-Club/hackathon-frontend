@@ -37,8 +37,6 @@ const Feed = () => {
 
     const fetchMoreData = () => {
         addTweet(newTweet);
-        log.info(tweets.length)
-        // Fetch next set of data and update state
     };
 
     useEffect(() => {

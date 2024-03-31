@@ -41,7 +41,7 @@ const Profile = () => {
                 </IconButton>
             </Tooltip>
 
-            {/* Profile View */}
+            {/* Profile Bar */}
             <BasePopup open={isProfileSettingsOpen} anchor={profileSettingsAnchor} placement='top-end'>
                 <ClickAwayListener onClickAway={closeProfileSettings}>
                         {isSignedIn ? 
