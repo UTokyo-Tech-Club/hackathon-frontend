@@ -70,8 +70,8 @@ const Edit: React.FC = () => {
         setIsProcessing(true);
         Promise.all([updateFirebaseProfile(), updateBackendProfile()])
             .then(() => {
-                handleClose();
                 openSnack("Profile Updated!", "success");
+                handleClose();
             })
             .catch((error) => {
                 openSnack("Please Retry...", "error");

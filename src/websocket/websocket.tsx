@@ -57,7 +57,7 @@ import { createContext, ReactNode } from 'react';
 import log from 'loglevel';
 import useWebSocket from 'react-use-websocket';
 
-interface WebSocketContextType {
+export interface WebSocketContextType {
     sendWS: <T>(message: object) => Promise<T>;
 }
 

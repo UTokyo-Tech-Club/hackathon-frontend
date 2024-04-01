@@ -23,7 +23,10 @@ const SidebarIcon = () => {
             <IconButton onClick={handleProfileSettings}>
                     <Avatar>
                         {photoURL ? 
-                            <img src={photoURL} alt={username} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> 
+                            <img 
+                                src={photoURL} 
+                                alt={username} 
+                                style={{ width: "100%", height: "100%", objectFit: "cover" }} /> 
                             : 
                             <GradientCircularProgress />
                         }

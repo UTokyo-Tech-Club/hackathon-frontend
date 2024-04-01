@@ -2,9 +2,9 @@ import { useEffect, useRef, useState, useContext } from "react";
 import UseFeedStore from "../../stores/Feed";
 import { TweetInterface } from "../../interfaces/Tweet";
 import Tweet from "../tweet";
-import CircularProgress from '@mui/material/CircularProgress';
 import { WebSocketContext } from '../../websocket/websocket';
 import log from 'loglevel';
+import GradientCircularProgress from "../decorations/progress/Circular";
 
 // MUI
 import Container from '@mui/material/Container';
@@ -31,6 +31,8 @@ const Feed = () => {
             data: { 
                 uid: string, 
                 ownerUID: string, 
+                ownerUsername: string,
+                ownerPhotoURL: string,
                 content: object, 
                 createdAt: string, 
                 updatedAt: string 
@@ -49,8 +51,8 @@ const Feed = () => {
                 const tweetData: TweetInterface = {
                     uid: r.data.uid,
                     ownerUID: r.data.ownerUID,
-                    ownerUsername: "User A",
-                    ownerPhotoURL: "https://www.w3schools.com/howto/img_avatar.png",
+                    ownerUsername: r.data.ownerUsername,
+                    ownerPhotoURL: r.data.ownerPhotoURL,
                     isFollowingOwner: false,
                     isBookmarked: false,
                     isLiked: false,
@@ -102,8 +104,8 @@ const Feed = () => {
             {tweets.map((item, index) => (
                 <Tweet key={index} tweet={item} />
             ))}
-
-            <CircularProgress ref={loaderRef} sx={{ alignSelf: "center" }} />
+            <div ref={loaderRef}></div>
+            <GradientCircularProgress />
         </Container>
     );
 }

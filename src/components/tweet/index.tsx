@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { TweetInterface } from "../../interfaces/Tweet";
 import Content from './Content';
 import Link from './link';
 import Metadata from './Metadata';
+import handleFollow from '../profile/services/Follow';
+import { WebSocketContext } from '../../websocket/websocket';
 
 // MUI
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import UseUserStore from '../../stores/User';
 
 const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
+
+    const { uid } = UseUserStore();
+    
+    const isUserOwner = tweet.ownerUID === uid;
+
+    const wsCtx = useContext(WebSocketContext);
+
     return (
         <Paper elevation={1} sx={{ my: 2 }}>
             <Stack>
@@ -21,9 +31,7 @@ const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
                 <Stack direction="row">
 
                     {/* Profile */}
-                    <Avatar sx={{ width: 64, height: 64 }}>
-                        <img src={tweet.ownerPhotoURL} alt={tweet.ownerUsername} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    </Avatar>
+                    <Avatar sx={{ width: 40, height: 40, m: 2 }} src={tweet.ownerPhotoURL} alt={tweet.ownerUsername} />
 
                     {/* Content */}
                     <Stack width="100%">
@@ -32,7 +40,7 @@ const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
                         <Stack direction="row" height={64}>
                             <Typography alignSelf="center" variant="body2">{tweet.ownerUsername}</Typography>
                             <Box display='flex' height={32} alignSelf='center' sx={{ ml: 2}}>
-                                <Button variant="outlined">Follow</Button>
+                                {!isUserOwner && <Button variant="outlined" onClick={() => handleFollow(wsCtx, tweet.ownerUID)}>Follow</Button>}
                             </Box>
                         </Stack>
 
