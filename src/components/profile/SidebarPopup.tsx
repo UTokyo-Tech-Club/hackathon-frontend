@@ -25,13 +25,13 @@ const SidebarPopup: React.FC = () => {
             <ClickAwayListener onClickAway={closeProfileSettings}>
                     {isSignedIn ? 
                         // Signed in
-                        <Paper elevation={2}>
+                        <Paper elevation={2} sx={{ p:2 }}>
                             <Stack>
                                 <Stack direction="row">
                                     <Avatar>
                                     <img src={photoURL} alt={username} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                     </Avatar>
-                                    <Stack>
+                                    <Stack sx={{ ml: 1 }}>
                                         <Typography variant="body2">
                                             {username}
                                         </Typography>
@@ -40,11 +40,11 @@ const SidebarPopup: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </Stack>
-                                <Container>
-                                    <LoadingButton loading={processing} variant="outlined" onClick={openEditProfile}>
+                                <Container sx={{ ml: 1.5 }}>
+                                    <LoadingButton loading={processing} variant="outlined" onClick={openEditProfile} sx={{ m: 1 }}>
                                         Edit
                                     </LoadingButton>
-                                    <Button variant="outlined" onClick={signOut}>
+                                    <Button variant="outlined" onClick={signOut} sx={{ m: 1 }}>
                                         Sign Out
                                     </Button>
                                 </Container>
@@ -52,7 +52,7 @@ const SidebarPopup: React.FC = () => {
                         </Paper>
                         :
                         // Signed out
-                        <Paper elevation={2}>
+                        <Paper elevation={2} sx={{ p: 2 }}>
                             <Button onClick={signInWithGoogle}>
                                 Sign In
                             </Button>

@@ -27,7 +27,7 @@ const Edit: React.FC = () => {
     const { sendWS } = wsCtx;
 
     const { isEditProfileOpen, closeEditProfile, openSnack } = UseAppStore();
-    const { content, setContent, setIsProcessing: setProcessing } = UseProfileStore();
+    const { content, setContent, setIsProcessing, isProcessing } = UseProfileStore();
     const { photoURL, username } = UseUserStore();
 
     const updateFirebaseProfile = async () => {
@@ -68,7 +68,7 @@ const Edit: React.FC = () => {
     }
 
     const handleSave = async () => {
-        setProcessing(true);
+        setIsProcessing(true);
         Promise.all([updateFirebaseProfile(), updateBackendProfile()])
             .then(() => {
                 handleClose();
@@ -79,14 +79,14 @@ const Edit: React.FC = () => {
                 log.error("Error updating profile: ", error)
             })
             .finally(() => {
-                setProcessing(false);
+                setIsProcessing(false);
             });
     }
 
     useEffect(() => {
         if (!isEditProfileOpen || content) return;
 
-        setProcessing(true);
+        setIsProcessing(true);
         sendWS<ProfileContentResponse>(
             JSON.stringify({ 
                 type: "user", 
@@ -95,17 +95,19 @@ const Edit: React.FC = () => {
             .then((result) => {
                 if (result.error !== "null") throw new Error(result.error);
                 setContent(result.content)
-                setProcessing(false);
             })
             .catch((error) => {
                 log.error("Error getting profile content: ", error);
                 openSnack("Error Getting Profile", "error");
+            })
+            .finally(() => {
+                setIsProcessing(false);
             });
 
     }, [isEditProfileOpen]);
 
     return (
-        <Dialog open={isEditProfileOpen && Boolean(content)} fullWidth sx={{ maxHeight: "90vh" }}>
+        <Dialog open={isEditProfileOpen && Boolean(content) && !isProcessing} fullWidth sx={{ maxHeight: "90vh" }}>
             <ClickAwayListener onClickAway={handleClose}>
                 <Paper>
                     {/* Header */}
@@ -121,7 +123,7 @@ const Edit: React.FC = () => {
                     </Stack>
                 </Paper>
             </ClickAwayListener>
-        </Dialog>   
+        </Dialog>
     );
 }
 

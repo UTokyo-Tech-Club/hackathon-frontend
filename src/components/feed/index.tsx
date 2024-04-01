@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import UseFeedStore from "../../stores/Feed";
-import { TweetInterface, TweetData } from "../../interfaces/Tweet";
+import { TweetInterface } from "../../interfaces/Tweet";
 import Tweet from "../tweet";
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -12,31 +12,28 @@ const Feed = () => {
 
     const { tweets, addTweet } = UseFeedStore();
 
-    const tweet: TweetData = {
-        blocks: [
-            {
-                type: 'paragraph',
-                data: {
-                    text: 'Hello World!'
-                }
-            }
-        ]
-    }
-
-    const newTweet: TweetInterface = {
-        uid: '2',
-        createdBy: 'Theo Jang',
-        content: tweet,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        numbLikes: 0,
-        liked: false,
-        bookmarked: false,
-    };
-
     const fetchMoreData = () => {
-        addTweet(newTweet);
+
+        const tweetData: TweetInterface = {
+            uid: "1",
+            ownerUID: "1",
+            ownerUsername: "User A",
+            ownerPhotoURL: "https://www.w3schools.com/howto/img_avatar.png",
+            isFollowingOwner: false,
+            isBookmarked: false,
+            isLiked: false,
+            isViewed: false,
+            numLikes: 0,
+            numComments: 0,
+            numLinks: 0,
+            numViews: 0,
+            content: "Some content...",
+            links: [],
+        }
+
+        addTweet(tweetData);
     };
+
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -65,7 +62,6 @@ const Feed = () => {
                 <Tweet key={index} tweet={item} />
             ))}
 
-            
             <CircularProgress ref={loaderRef} sx={{ alignSelf: "center" }} />
         </Container>
     );

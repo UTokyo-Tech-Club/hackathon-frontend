@@ -8,7 +8,6 @@ import Metadata from './Metadata';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Button';
-import PersonIcon from '@mui/icons-material/Person';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
@@ -38,8 +37,11 @@ const DEFAULT_INITIAL_DATA = {
     ],
 };
 
-const Tweet: React.FC<{tweet: TweetInterface;}> = ({ tweet }) => {
-    console.log(tweet)
+interface TweetProps {
+    tweet: TweetInterface;
+}
+
+const Tweet: React.FC<TweetProps> = ({ tweet }) => {
     return (
         <Paper elevation={1} sx={{ my: 2 }}>
             <Stack>
@@ -48,7 +50,7 @@ const Tweet: React.FC<{tweet: TweetInterface;}> = ({ tweet }) => {
 
                     {/* Profile */}
                     <Avatar sx={{ width: 64, height: 64 }}>
-                        <PersonIcon />
+                        <img src={tweet.ownerPhotoURL} alt={tweet.ownerUsername} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     </Avatar>
 
                     {/* Content */}
@@ -56,7 +58,7 @@ const Tweet: React.FC<{tweet: TweetInterface;}> = ({ tweet }) => {
 
                         {/* Profile Info */}
                         <Stack direction="row" height={64}>
-                            <Typography alignSelf="center" variant="body2">User A</Typography>
+                            <Typography alignSelf="center" variant="body2">{tweet.ownerUsername}</Typography>
                             <Box display='flex' height={32} alignSelf='center' sx={{ ml: 2}}>
                                 <Button variant="outlined">Follow</Button>
                             </Box>
