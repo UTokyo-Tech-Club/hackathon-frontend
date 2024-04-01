@@ -35,38 +35,7 @@ import ChecklistTool from "@editorjs/checklist";
 //@ts-ignore
 import AlignmentTuneTool from "editorjs-text-alignment-blocktune";
 
-// interface CustomHeaderConfig {
-//     placeholder?: string;
-// }
-
-// const DEFAULT_INITIAL_DATA = {
-//     time: new Date().getTime(),
-//     blocks: [
-//         {
-//             type: "paragraph",
-//             data: {
-//                 text: "",
-//             },
-//             config: {
-//                 placeholder: "Write...",
-//             }
-//             // hint: "Write...",
-//         },
-//     ],
-// };
-
-
-
-interface Data {
-    blocks: {
-        type: string;
-        data: {
-            text: string;
-        };
-    }[];
-}
-
-const Content: React.FC<{data: Data}> = ({ data }) => {
+const Content: React.FC<{ data: string }> = ({ data }) => {
     const ejInstance = useRef<EditorJS | null>(null);
 
     const uid = uuidv4();
@@ -138,7 +107,7 @@ const Content: React.FC<{data: Data}> = ({ data }) => {
                     log.error('Editor.js instance is not available')
                 },
 
-                data: data
+                data: JSON.parse(data)
             };
 
             const editor = new EditorJS(editorConfig);

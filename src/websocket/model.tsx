@@ -40,14 +40,14 @@ const PingSchema: JSONSchemaType<PingResponse> = {
 
 
 interface ProfileContentResponse {
-    content: string;
+    content: object;
     error: string;
 }
 
 const ProfileContentSchema: JSONSchemaType<ProfileContentResponse> = {
     type: "object",
     properties: {
-        content: { type: "string" }, // Fix the type of the content property
+        content: { type: "object" },
         error: { type: "string" },
     },
     required: ["content", "error"],
@@ -55,5 +55,21 @@ const ProfileContentSchema: JSONSchemaType<ProfileContentResponse> = {
 };
 
 
-export { Validate, PushSchema, PingSchema, ProfileContentSchema }
-export type { PushResponse, PingResponse, ProfileContentResponse };
+interface TweetResponse {
+    tweet: object;
+    error: string;
+}
+
+const TweetSchema: JSONSchemaType<TweetResponse> = {
+    type: "object",
+    properties: {
+        tweet: { type: "object" },
+        error: { type: "string" },
+    },
+    required: ["tweet", "error"],
+    additionalProperties: false
+};
+
+
+export { Validate, PushSchema, PingSchema, ProfileContentSchema, TweetSchema }
+export type { PushResponse, PingResponse, ProfileContentResponse, TweetResponse };

@@ -9,7 +9,7 @@ type Profile = {
 }
 
 const UseProfileStore = create<Profile>((set) => ({
-    content: '',
+    content: "",
     isProcessing: false,
 
     setContent: (content) => set({ content: content }),

@@ -14,6 +14,9 @@ interface TweetInterface {
     numLinks: number;
     numViews: number;
 
+    createdAt: Date;
+    updatedAt: Date;
+
     content: string;
     links: string[];
 }

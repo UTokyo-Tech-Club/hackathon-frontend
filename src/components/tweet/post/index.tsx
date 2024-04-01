@@ -15,7 +15,6 @@ import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Paper from '@mui/material/Paper';
-import { PushResponse, PushSchema } from '../../../websocket/model';
 
 const Post: React.FC = () => {
     const wsCtx = useContext(WebSocketContext);
@@ -43,14 +42,16 @@ const Post: React.FC = () => {
     const handlePublish = () => {
         setIsProcessing(true);
 
-        sendWS<PushResponse>(
-            JSON.stringify({ 
+        sendWS<{ error: string }>({ 
                 type: "tweet", 
                 action: "post", 
-                data: content}),
-                PushSchema)
+                data: {
+                    content: content
+                }
+            })
             .then((result) => {
                 if (result.error !== "null") throw new Error(result.error);
+                openSnack("Posted New Tweet!", "success");
                 handleClose();
             })
             .catch((error) => {
@@ -61,9 +62,6 @@ const Post: React.FC = () => {
             .finally(() => {
                 setIsProcessing(false);
             });
-
-        openSnack("Posted New Tweet!", "success");
-        closeNewTweet();
     }
 
     const handleClose = () => {

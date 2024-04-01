@@ -10,7 +10,6 @@ import UseUserStore from './stores/User';
 import Post from "./components/tweet/post";
 import { WebSocketContext } from './websocket/websocket';
 import Copyright from "./components/decorations/copyright";
-import { PingResponse, PingSchema, PushResponse, PushSchema } from "./websocket/model";
 
 // MUI
 import Container from '@mui/material/Container';
@@ -24,35 +23,36 @@ export default function App() {
 
   log.setLevel(log.levels.DEBUG);
 
-  const { currentContent, openNewTweet, isSnackOpen, snackMessage, snakcSeverity, openSnack, closeSnack} = UseAppStore();
-  const { signIn } = UseUserStore();
-
   const wsCtx = useContext(WebSocketContext);
   if (!wsCtx) {
       throw new Error('Context not found');
   }
   const { sendWS } = wsCtx;
 
+  const { currentContent, openNewTweet, isSnackOpen, snackMessage, snakcSeverity, openSnack, closeSnack} = UseAppStore();
+  const { signIn } = UseUserStore();
+
+
   useEffect(() => {
     const unsubscribe = authApp.onAuthStateChanged(async (user) => {
         if (user) {
-          try {
-            const result = await sendWS<PushResponse>(
-              JSON.stringify({ 
-                type: "user", 
-                action: "auth", 
-                data: JSON.stringify({ token: await getToken() })}),
-                PushSchema) as PushResponse;
-            if (result.error !== "null") throw new Error(result.error);
-          } catch (error) {
-            log.error("Error sending auth to backend: ", error);
-            openSnack("Failed to Sign In", "error");
-            return;
-          }
-
-          signIn(user as any);
-          log.info("Front & backend signed in as ", user.uid);
-          openSnack("Wellcome " + user.displayName + "!", "success");
+          sendWS<{ error: string }>({ 
+            type: "user", 
+            action: "auth",
+            data: { 
+              token: await getToken(),
+            }
+          })
+            .then((result) => {
+              if (result.error !== "null") throw new Error(result.error);
+              signIn(user as any);
+              log.info("Front & backend signed in as ", user.uid);
+              openSnack("Wellcome " + user.displayName + "!", "success");
+            })
+            .catch((error) => {
+              log.error("Error sending auth to backend: ", error);
+              openSnack("Failed to Sign In", "error");
+            });
         } else {
             log.warn("No user is signed in")
         }
@@ -65,14 +65,13 @@ export default function App() {
     const pingWS = () => {
       if (!authApp.currentUser) return;
 
-      sendWS<PingResponse>(
-        JSON.stringify({ 
+      sendWS<{ data: string, error: string }>({ 
           type: "sys", 
-          action: "ping", 
-          data: JSON.stringify({ token: getToken() })}),
-        PingSchema)
+          action: "ping"
+      })
         .then((result) => {
-          if (result.response !== "pong") throw new Error(result.response);
+          if (result.error !== "null") throw new Error(result.error);
+          if (result.data !== "pong") throw new Error("Invalid response");
         })
         .catch((error) => {
           log.error("Error sending ping to backend: ", error);

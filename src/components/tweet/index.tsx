@@ -13,35 +13,7 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 
-const DEFAULT_INITIAL_DATA = {
-    // time: new Date().getTime(),
-    blocks: [
-        {
-            type: "header",
-            data: {
-                text: "Header...",
-            },
-        },
-        {
-            type: "paragraph",
-            data: {
-                text: "text...",
-            },
-        },
-        {
-            type: "paragraph",
-            data: {
-                text: "text...2222",
-            },
-        },
-    ],
-};
-
-interface TweetProps {
-    tweet: TweetInterface;
-}
-
-const Tweet: React.FC<TweetProps> = ({ tweet }) => {
+const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
     return (
         <Paper elevation={1} sx={{ my: 2 }}>
             <Stack>
@@ -66,7 +38,7 @@ const Tweet: React.FC<TweetProps> = ({ tweet }) => {
 
                         {/* Editor.js */}
                         <Box>
-                            <Content data={DEFAULT_INITIAL_DATA}/>
+                            <Content data={tweet.content}/>
                         </Box>
                     </Stack>
 

@@ -6,10 +6,8 @@ import { authApp } from '../../../firebase/config';
 import { updateProfile } from "firebase/auth";
 import log from 'loglevel';
 import Appbar from './Appbar';
-import { PushResponse, PushSchema } from '../../../websocket/model';
 import Picture from './Picture';
 import Content from './Content';
-import { ProfileContentResponse, ProfileContentSchema } from '../../../websocket/model';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
@@ -45,25 +43,26 @@ const Edit: React.FC = () => {
     };
 
     const updateBackendProfile = async () => {
-        try {
-            const result = await sendWS<PushResponse>(
-                JSON.stringify({ 
-                    type: "user", 
-                    action: "edit", 
-                    data: JSON.stringify({ 
-                        username: username, 
-                        photoURL: photoURL, 
-                        profileContent: content
-                    })}),
-                    PushSchema) as PushResponse;
-            if (result.error !== "null") throw new Error(result.error);
-        } catch (error) {
-            log.error("Error sending edit message: ", error)
-        }
+
+        sendWS<{ error: string }>({ 
+            type: "user", 
+            action: "edit",
+            data: { 
+                username: username, 
+                photoURL: photoURL, 
+                profileContent: content
+            }
+        })
+            .then((result) => {
+                if (result.error !== "null") throw new Error(result.error);
+            })
+            .catch((error) => {
+                log.error("Error sending edit message: ", error)
+            });
     }
 
     const handleClose = () => {
-        setContent('');
+        setContent("");
         closeEditProfile();
     }
 
@@ -87,14 +86,13 @@ const Edit: React.FC = () => {
         if (!isEditProfileOpen || content) return;
 
         setIsProcessing(true);
-        sendWS<ProfileContentResponse>(
-            JSON.stringify({ 
-                type: "user", 
-                action: "get_profile_content"}),
-                ProfileContentSchema)
+        sendWS<{ data: { content: object }, error: string }>({ 
+            type: "user", 
+            action: "get_profile_content"
+        })
             .then((result) => {
                 if (result.error !== "null") throw new Error(result.error);
-                setContent(result.content)
+                setContent(JSON.stringify(result.data.content))
             })
             .catch((error) => {
                 log.error("Error getting profile content: ", error);
