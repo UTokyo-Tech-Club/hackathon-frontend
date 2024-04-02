@@ -40,7 +40,7 @@ const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
                         <Stack direction="row" height={64}>
                             <Typography alignSelf="center" variant="body2">{tweet.ownerUsername}</Typography>
                             <Box display='flex' height={32} alignSelf='center' sx={{ ml: 2}}>
-                                {!isUserOwner && <Button variant="outlined" onClick={() => handleFollow(wsCtx, tweet.ownerUID)}>Follow</Button>}
+                                {!isUserOwner && <Button variant="contained" onClick={() => handleFollow(wsCtx, tweet.ownerUID)}>Follow</Button>}
                             </Box>
                         </Stack>
 
