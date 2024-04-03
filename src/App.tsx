@@ -29,33 +29,57 @@ export default function App() {
   }
   const { sendWS } = wsCtx;
 
-  const { currentContent, openNewTweet, isSnackOpen, snackMessage, snakcSeverity, openSnack, closeSnack} = UseAppStore();
-  const { signIn } = UseUserStore();
+  const { currentContent, openNewTweet, isSnackOpen, snackMessage, snackSeverity: snakcSeverity, openSnack, closeSnack} = UseAppStore();
+  const { signIn, setIsLoadingProfile, setFollowingUsers } = UseUserStore();
 
+
+  const pullMetadata = () => {
+    setTimeout(() => {
+      sendWS<{ followingUsers: string[], likedTweets: string[], bookmarkedTweets: string[], error: string }>({ 
+        type: "user", 
+        action: "pull_metadata",
+      })
+        .then((r) => {
+          if (r.error !== "null" || r.followingUsers === undefined) throw new Error(r.error);
+          if (r.followingUsers) setFollowingUsers(r.followingUsers);
+        })
+        .catch((error) => {
+          log.error("Error pulling metadata: ", error);
+        })
+        .finally(() => {
+        });
+    }, 200); // Delay is need to wait for connection to settle
+  }
 
   useEffect(() => {
     const unsubscribe = authApp.onAuthStateChanged(async (user) => {
-        if (user) {
-          sendWS<{ error: string }>({ 
-            type: "user", 
-            action: "auth",
-            data: { 
-              token: await getToken(),
-            }
+      if (user) {
+        setIsLoadingProfile(true);
+        sendWS<{ error: string }>({ 
+          type: "user", 
+          action: "auth",
+          data: { 
+            token: await getToken(),
+          }
+        })
+          .then((r) => {
+            if (r.error !== "null") throw new Error(r.error);
+            signIn(user as any);
+            log.info("Front & backend signed in as ", user.uid);
+            openSnack("Wellcome " + user.displayName + "!", "success");
           })
-            .then((result) => {
-              if (result.error !== "null") throw new Error(result.error);
-              signIn(user as any);
-              log.info("Front & backend signed in as ", user.uid);
-              openSnack("Wellcome " + user.displayName + "!", "success");
-            })
-            .catch((error) => {
-              log.error("Error sending auth to backend: ", error);
-              openSnack("Failed to Sign In", "error");
-            });
-        } else {
-            log.warn("No user is signed in")
-        }
+          .catch((error) => {
+            log.error("Error sending auth to backend: ", error);
+            openSnack("Failed to Sign In", "error");
+          })
+          .finally(() => {
+            pullMetadata();
+            setIsLoadingProfile(false);
+          });
+      } else {
+        setIsLoadingProfile(false);
+        log.warn("No user is signed in")
+      }
     });
 
     return () => unsubscribe();
@@ -69,9 +93,9 @@ export default function App() {
           type: "sys", 
           action: "ping"
       })
-        .then((result) => {
-          if (result.error !== "null") throw new Error(result.error);
-          if (result.data !== "pong") throw new Error("Invalid response");
+        .then((r) => {
+          if (r.error !== "null" || r.data === undefined) throw new Error(r.error);
+          if (r.data !== "pong") throw new Error("Invalid response");
         })
         .catch((error) => {
           log.error("Error sending ping to backend: ", error);

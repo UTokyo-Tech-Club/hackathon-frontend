@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { TweetInterface } from "../../interfaces/Tweet";
 import Content from './Content';
 import Link from './link';
 import Metadata from './Metadata';
-import handleFollow from '../profile/services/Follow';
-import { WebSocketContext } from '../../websocket/websocket';
+import FollowButton from '../profile/services/Follow';
 
 // MUI
 import Box from '@mui/material/Box';
@@ -13,16 +12,14 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
-import Button from '@mui/material/Button';
 import UseUserStore from '../../stores/User';
+
 
 const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
 
     const { uid } = UseUserStore();
     
     const isUserOwner = tweet.ownerUID === uid;
-
-    const wsCtx = useContext(WebSocketContext);
 
     return (
         <Paper elevation={1} sx={{ my: 2 }}>
@@ -40,7 +37,7 @@ const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
                         <Stack direction="row" height={64}>
                             <Typography alignSelf="center" variant="body2">{tweet.ownerUsername}</Typography>
                             <Box display='flex' height={32} alignSelf='center' sx={{ ml: 2}}>
-                                {!isUserOwner && <Button variant="contained" onClick={() => handleFollow(wsCtx, tweet.ownerUID)}>Follow</Button>}
+                                {!isUserOwner && <FollowButton userToFollowUID={tweet.ownerUID} />}
                             </Box>
                         </Stack>
 

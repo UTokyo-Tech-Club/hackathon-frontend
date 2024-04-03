@@ -53,8 +53,8 @@ const Edit: React.FC = () => {
                 profileContent: content
             }
         })
-            .then((result) => {
-                if (result.error !== "null") throw new Error(result.error);
+            .then((r) => {
+                if (r.error !== "null") throw new Error(r.error);
             })
             .catch((error) => {
                 log.error("Error sending edit message: ", error)
@@ -90,9 +90,9 @@ const Edit: React.FC = () => {
             type: "user", 
             action: "get_profile_content"
         })
-            .then((result) => {
-                if (result.error !== "null") throw new Error(result.error);
-                setContent(JSON.stringify(result.data.content))
+            .then((r) => {
+                if (r.error !== "null" || r.data === undefined) throw new Error(r.error);
+                setContent(JSON.stringify(r.data.content))
             })
             .catch((error) => {
                 log.error("Error getting profile content: ", error);

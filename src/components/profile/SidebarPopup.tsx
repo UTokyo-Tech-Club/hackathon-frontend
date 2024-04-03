@@ -18,7 +18,7 @@ const SidebarPopup: React.FC = () => {
 
     const { isSignedIn, username, email, photoURL, signOut } = UseUserStore();
     const { isProfileSettingsOpen, profileSettingsAnchor, closeProfileSettings, openEditProfile } = UseAppStore();
-    const { isProcessing: processing } = UseProfileStore();
+    const { isProcessing } = UseProfileStore();
 
     return (
         <BasePopup open={isProfileSettingsOpen} anchor={profileSettingsAnchor} placement='top-end'>
@@ -41,7 +41,7 @@ const SidebarPopup: React.FC = () => {
                                     </Stack>
                                 </Stack>
                                 <Container sx={{ ml: 1.5 }}>
-                                    <LoadingButton loading={processing} variant="outlined" onClick={openEditProfile} sx={{ m: 1 }}>
+                                    <LoadingButton loading={isProcessing} variant="outlined" onClick={openEditProfile} sx={{ m: 1 }}>
                                         Edit
                                     </LoadingButton>
                                     <Button variant="outlined" onClick={signOut} sx={{ m: 1 }}>

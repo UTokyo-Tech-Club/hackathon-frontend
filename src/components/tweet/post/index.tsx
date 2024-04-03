@@ -49,8 +49,8 @@ const Post: React.FC = () => {
                     content: content
                 }
             })
-            .then((result) => {
-                if (result.error !== "null") throw new Error(result.error);
+            .then((r) => {
+                if (r.error !== "null") throw new Error(r.error);
                 openSnack("Posted New Tweet!", "success");
                 handleClose();
             })

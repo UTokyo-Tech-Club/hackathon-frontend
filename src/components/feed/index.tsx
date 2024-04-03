@@ -44,7 +44,7 @@ const Feed = () => {
                 }
             })
             .then((r) => {
-                if (r.error !== "null") throw new Error(r.error);
+                if (r.error !== "null" || r.data === undefined) throw new Error(r.error);
 
                 if (!r.data.content) return;
 

@@ -11,6 +11,8 @@ type User = {
 
     followingUsers: string[];
 
+    isLoadingProfile: boolean;
+
     signIn: (user: firebase.User) => void;
     signOut: () => void;
     setUid: (uid: string) => void;
@@ -20,6 +22,9 @@ type User = {
 
     addFollowingUser: (uid: string) => void;
     removeFollowingUser: (uid: string) => void;
+    setFollowingUsers: (uids: string[]) => void;
+
+    setIsLoadingProfile: (isLoading: boolean) => void;
 }
 
 const UseUserStore = create<User>((set) => ({
@@ -31,9 +36,11 @@ const UseUserStore = create<User>((set) => ({
 
     followingUsers: [],
 
+    isLoadingProfile: true,
+
     signIn: (user) => set({ isSignedIn: true, uid: user.uid, username: user.displayName || '', email: user.email || '', photoURL: user.photoURL || '' }),
     signOut: () => {
-        set({ isSignedIn: false, uid: '', username: '', email: ''})
+        set({ isSignedIn: false, uid: '', username: '', email: '', photoURL: '', followingUsers: []})
         signOutUser();
     },
     setUid: (uid: string) => set({ uid: uid }),
@@ -43,6 +50,9 @@ const UseUserStore = create<User>((set) => ({
 
     addFollowingUser: (uid) => set((state) => ({ followingUsers: [...state.followingUsers, uid] })),
     removeFollowingUser: (uid) => set((state) => ({ followingUsers: state.followingUsers.filter((u) => u !== uid) })),
+    setFollowingUsers: (uids) => set({ followingUsers: uids }),
+
+    setIsLoadingProfile: (isLoading) => set({ isLoadingProfile: isLoading })
 }));
 
 export default UseUserStore;

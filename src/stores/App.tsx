@@ -11,7 +11,7 @@ type AppStore = {
 
     isSnackOpen: boolean;
     snackMessage: string;
-    snakcSeverity: "success" | "error" | "warning" | "info";
+    snackSeverity: "success" | "error" | "warning" | "info";
     
     setContent: (content: ContentType) => void;
 
@@ -38,7 +38,7 @@ const UseAppStore = create<AppStore>((set) => ({
 
     isSnackOpen: false,
     snackMessage: '',
-    snakcSeverity: "success",
+    snackSeverity: "success",
 
     setContent: (content) => set({ currentContent: content }),
 
@@ -52,7 +52,7 @@ const UseAppStore = create<AppStore>((set) => ({
     closeProfileSettings: () => set({ isProfileSettingsOpen: false }),
     setProfileSettingsAnchor: (anchor) => set({ profileSettingsAnchor: anchor }),
 
-    openSnack: (message, severity) => set({ isSnackOpen: true, snackMessage: message, snakcSeverity: severity}),
+    openSnack: (message, severity) => set({ isSnackOpen: true, snackMessage: message, snackSeverity: severity}),
     closeSnack: () => set({ isSnackOpen: false }),
 }));
 

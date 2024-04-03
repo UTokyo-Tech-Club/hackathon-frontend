@@ -21,14 +21,16 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         onOpen: () => log.info('WebSocket connection established'),
         onClose: () => log.warn('WebSocket connection closed'),
         onMessage: (event) => {
-            log.info('WebSocket message received:', event.data);
             const msg = JSON.parse(event.data)
 
             if (msg["type"] === "user" && msg["action"] === "follow") {
                 openSnack("New Follower!", "info")
             }
         },
-        // shouldReconnect: (closeEvent) => true, // Automatically reconnect on close
+        shouldReconnect: (closeEvent) => {
+            log.warn('WebSocket closed unexpectedly:', closeEvent);
+            return true; // Reconnect
+        },
     });
 
     async function sendWS<T>(message: object): Promise<T> {
@@ -59,12 +61,6 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             ws.addEventListener('error', (event) => {
                 reject(new Error('WebSocket error: ' + event));
             });
-
-            // ws.addEventListener('close', (event) => {
-            //     if (!event.wasClean) {
-            //         reject(new Error('WebSocket closed unexpectedly: ' + event));
-            //     }
-            // });
 
             return () => {
                 ws.removeEventListener('message', (event) => handleMessage(event));

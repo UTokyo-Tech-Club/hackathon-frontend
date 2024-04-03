@@ -7,10 +7,12 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Zoom from '@mui/material/Zoom';
+import PersonIcon from '@mui/icons-material/Person';
+
 
 const SidebarIcon = () => {
 
-    const { username, photoURL } = UseUserStore();
+    const { username, photoURL, isLoadingProfile } = UseUserStore();
     const { toggleProfileSettings, setProfileSettingsAnchor } = UseAppStore();
 
     const handleProfileSettings = (event: React.MouseEvent<HTMLElement>) => {
@@ -28,7 +30,7 @@ const SidebarIcon = () => {
                                 alt={username} 
                                 style={{ width: "100%", height: "100%", objectFit: "cover" }} /> 
                             : 
-                            <GradientCircularProgress />
+                            isLoadingProfile ? <GradientCircularProgress /> : <PersonIcon />
                         }
                     </Avatar>
             </IconButton>

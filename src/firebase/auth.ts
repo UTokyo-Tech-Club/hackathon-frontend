@@ -16,9 +16,11 @@ const getToken = async () => {
     }
 };
 
+
 const signOutUser = () => {
     signOut(authApp).then(() => {
         log.info("Signed out successfully");
+        window.location.reload();
     }).catch((error) => {
         log.error("Sign out error", error);
     });
