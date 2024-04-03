@@ -33,10 +33,7 @@ const Post: React.FC = () => {
 
     useEffect(() => {
         if (!content) return;
-
         setIsContentValid(JSON.parse(content)['blocks'].length > 0);
-        // console.log(content);
-        // setIsContentValid(true)
     }, [content]);
 
     const handlePublish = () => {

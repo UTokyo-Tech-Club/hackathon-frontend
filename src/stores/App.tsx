@@ -7,6 +7,7 @@ type AppStore = {
     isNewTweetOpen: boolean;
     isProfileSettingsOpen: boolean;
     isEditProfileOpen: boolean;
+    isEditTweetOpen: boolean;
     profileSettingsAnchor: HTMLElement | null;
 
     isSnackOpen: boolean;
@@ -21,6 +22,9 @@ type AppStore = {
     openEditProfile: () => void;
     closeEditProfile: () => void;
 
+    openEditTweet: () => void;
+    closeEditTweet: () => void;
+
     toggleProfileSettings: () => void;
     closeProfileSettings: () => void;
     setProfileSettingsAnchor: (anchor: HTMLElement | null) => void;
@@ -34,6 +38,7 @@ const UseAppStore = create<AppStore>((set) => ({
     isNewTweetOpen: false,
     isProfileSettingsOpen: false,
     isEditProfileOpen: false,
+    isEditTweetOpen: false,
     profileSettingsAnchor: null,
 
     isSnackOpen: false,
@@ -47,6 +52,9 @@ const UseAppStore = create<AppStore>((set) => ({
 
     openEditProfile: () => set({ isEditProfileOpen: true, isProfileSettingsOpen: false }),
     closeEditProfile: () => set({ isEditProfileOpen: false }),
+
+    openEditTweet: () => set({ isEditTweetOpen: true }),
+    closeEditTweet: () => set({ isEditTweetOpen: false }),
 
     toggleProfileSettings: () => set((state) => ({ isProfileSettingsOpen: !state.isProfileSettingsOpen })),
     closeProfileSettings: () => set({ isProfileSettingsOpen: false }),

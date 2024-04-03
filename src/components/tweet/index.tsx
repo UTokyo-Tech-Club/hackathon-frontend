@@ -4,6 +4,9 @@ import Content from './Content';
 import Link from './link';
 import Metadata from './Metadata';
 import FollowButton from '../profile/services/Follow';
+import UseAppStore from '../../stores/App';
+import UseTweetStore from '../../stores/Tweet';
+
 
 // MUI
 import Box from '@mui/material/Box';
@@ -13,6 +16,8 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 import UseUserStore from '../../stores/User';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
@@ -20,6 +25,15 @@ const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
     const { uid } = UseUserStore();
     
     const isUserOwner = tweet.ownerUID === uid;
+
+    const { openEditTweet } = UseAppStore();
+    const { setContent, setTweetUID } = UseTweetStore();
+
+    const handleEdit = () => {
+        setTweetUID(tweet.uid);
+        setContent(tweet.content);
+        openEditTweet();
+    }
 
     return (
         <Paper elevation={1} sx={{ my: 2 }}>
@@ -37,7 +51,13 @@ const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
                         <Stack direction="row" height={64}>
                             <Typography alignSelf="center" variant="body2">{tweet.ownerUsername}</Typography>
                             <Box display='flex' height={32} alignSelf='center' sx={{ ml: 2}}>
-                                {!isUserOwner && <FollowButton userToFollowUID={tweet.ownerUID} />}
+                                {!isUserOwner ? 
+                                    <FollowButton userToFollowUID={tweet.ownerUID} />
+                                    :
+                                    <IconButton onClick={handleEdit}>
+                                        <EditIcon sx={{ height: 20, width: 20 }} />
+                                    </IconButton>
+                                }
                             </Box>
                         </Stack>
 

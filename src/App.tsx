@@ -10,6 +10,8 @@ import UseUserStore from './stores/User';
 import Post from "./components/tweet/post";
 import { WebSocketContext } from './websocket/websocket';
 import Copyright from "./components/decorations/copyright";
+import GradientBackground from "./components/decorations/background/GradientBackground";
+import EditTweet from "./components/tweet/edit";
 
 // MUI
 import Container from '@mui/material/Container';
@@ -107,7 +109,7 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <GradientBackground>
       <Stack direction="row" justifyContent="center">
         {/* Sidebar */}
         <div className='sidebar'>
@@ -126,9 +128,13 @@ export default function App() {
             <EditIcon />
           </Fab>
         </div>
-        {/* New Tweet Dialog */}
-        <Post />
       </Stack>
+
+      {/* New Tweet Dialog */}
+      <Post />
+
+      {/* Edit Tweet Dialog */}
+      <EditTweet />
 
       {/* Footer */}
       <Copyright />
@@ -139,7 +145,7 @@ export default function App() {
           {snackMessage}
         </Alert>
       </Snackbar>
-    </>
+    </GradientBackground>
   )
 }
 

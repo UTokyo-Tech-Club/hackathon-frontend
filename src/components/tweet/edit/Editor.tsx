@@ -2,30 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import EditorJS, { EditorConfig } from '@editorjs/editorjs';
 import { v4 as uuidv4 } from 'uuid';
 import log from 'loglevel';
-import UsePostStore from '../../../stores/Post';
 import EditorTools from '../../../utils/editor/EditorTools';
-
-const DEFAULT_INITIAL_DATA = {
-    time: new Date().getTime(),
-    blocks: [
-        {
-            type: "paragraph",
-            data: {
-                text: "",
-            },
-            config: {
-                placeholder: "Write...",
-            }
-            // hint: "Write...",
-        },
-    ],
-};
+import UseTweetStore from '../../../stores/Tweet';
 
 const Editor: React.FC = () => {
     const ejInstance = useRef<EditorJS | null>(null);
     const uid = uuidv4();
 
-    const { setContent } = UsePostStore();
+    const { content, setContent } = UseTweetStore();
 
     useEffect(() => {
         if (ejInstance.current) return;
@@ -36,7 +20,7 @@ const Editor: React.FC = () => {
             defaultBlock: "paragraph",
             minHeight: 10,
             tools: EditorTools,
-            data: DEFAULT_INITIAL_DATA,
+            data: JSON.parse(content),
             onReady: () => {
             },
             onChange: async () => {
