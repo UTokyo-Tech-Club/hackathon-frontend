@@ -1,8 +1,10 @@
 import Appbar from './Appbar';
 import UseTweetStore from '../../../stores/Tweet';
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import Editor from './Editor';
 import UseUserStore from '../../../stores/User';
+import { WebSocketContext } from '../../../websocket/websocket';
+import log from 'loglevel';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
@@ -14,21 +16,17 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 
 const EditTweet: React.FC = () => {
+    const wsCtx = useContext(WebSocketContext);
+    if (!wsCtx) {
+        throw new Error('Context not found');
+    }
+    const { sendWS } = wsCtx;
 
     const [isContentValid, setIsContentValid] = useState<boolean>(false);
 
-    const { isEditTweetOpen, closeEditTweet } = UseAppStore();
-    const { content, setContent, setIsProcessing } = UseTweetStore();
+    const { isEditTweetOpen, closeEditTweet, openSnack } = UseAppStore();
+    const { content, tweetUID, setContent, setIsProcessing } = UseTweetStore();
     const { username, photoURL } = UseUserStore();
-
-    // useEffect(() => {
-    //     if (!isEditTweetOpen) return;
-    //     setTweet(tweets.find((t) => t.uid === tweetUID));
-    //     console.log(tweetUID)
-    //     console.log(tweets)
-    //     console.log(tweets.find((t) => t.uid === tweetUID))
-    // }, [isEditTweetOpen])
-    
 
     useEffect(() => {
         if (!content) return;
@@ -42,7 +40,26 @@ const EditTweet: React.FC = () => {
 
     const handleSave = () => {
         setIsProcessing(true);
-
+        sendWS<{ error: string }>({ 
+            type: "tweet", 
+            action: "edit",
+            data: { 
+                tweetUID: tweetUID,
+                content: content
+            }
+        })
+            .then((r) => {
+                if (r.error !== "null") throw new Error(r.error);
+                openSnack("Updated Tweet!", "success");
+                handleClose();
+            })
+            .catch((error) => {
+                log.error("Error updating tweet: ", error);
+                openSnack("Failed to Save", "error");
+            })
+            .finally(() => {
+                setIsProcessing(false);
+            });
     }
 
     const handleDelete = () => {

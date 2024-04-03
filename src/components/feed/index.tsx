@@ -22,6 +22,8 @@ const Feed = () => {
 
     const [isLocked, setIsLocked] = useState(false);
 
+    const [isVisible, setIsVisible] = useState(true);
+
     const fetchMoreData = () => {
         if (isLocked) return;
 
@@ -99,14 +101,26 @@ const Feed = () => {
         };
     }, [fetchMoreData]);
 
+    useEffect(() => {
+        setIsVisible(false);
+        setTimeout(() => {
+            setIsVisible(true);
+        }, 10);
+    }, [tweets]);
+
     return (
-        <Container>
-            {tweets.map((item, index) => (
-                <Tweet key={index} tweet={item} />
-            ))}
-            <div ref={loaderRef}></div>
-            <GradientCircularProgress />
-        </Container>
+    <>
+        {isVisible && 
+            <Container>
+                {tweets.map((item, index) => (
+                    <Tweet key={index} tweet={item} />
+                ))}
+                <div ref={loaderRef}></div>
+                <GradientCircularProgress />
+            </Container>
+        }       
+    </>
+        
     );
 }
 

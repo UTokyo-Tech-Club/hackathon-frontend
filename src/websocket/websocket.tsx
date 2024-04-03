@@ -2,6 +2,8 @@ import { createContext, ReactNode } from 'react';
 import log from 'loglevel';
 import useWebSocket from 'react-use-websocket';
 import UseAppStore from '../stores/App';
+import { TweetInterface } from '../interfaces/Tweet';
+import UseFeedStore from '../stores/Feed';
 
 export interface WebSocketContextType {
     sendWS: <T>(message: object) => Promise<T>;
@@ -14,7 +16,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const WS_URL = import.meta.env.VITE_WS_URI;
 
     const { openSnack } = UseAppStore();
-
+    const { addTweetFront } = UseFeedStore();
 
     // Custom hook to send and receive WebSocket messages
     const { sendJsonMessage, getWebSocket } = useWebSocket(WS_URL, {
@@ -25,6 +27,31 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
             if (msg["type"] === "user" && msg["action"] === "follow") {
                 openSnack("New Follower!", "info")
+            }
+
+            if (msg["type"] === "tweet" && msg["action"] === "post") {
+                openSnack("New Tweet!", "info")
+
+                const tweetData: TweetInterface = {
+                    uid: msg["data"]["uid"],
+                    ownerUID: msg["data"]["ownerUID"],
+                    ownerUsername: msg["data"]["ownerUsername"],
+                    ownerPhotoURL: msg["data"]["ownerPhotoURL"],
+                    isFollowingOwner: false,
+                    isBookmarked: false,
+                    isLiked: false,
+                    isViewed: false,
+                    numLikes: 0,
+                    numComments: 0,
+                    numLinks: 0,
+                    numViews: 0,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    content: JSON.stringify(msg["data"]["content"]),
+                    links: [],
+                }
+
+                addTweetFront(tweetData);
             }
         },
         shouldReconnect: (closeEvent) => {

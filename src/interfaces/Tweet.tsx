@@ -4,21 +4,21 @@ interface TweetInterface {
     ownerUsername: string;
     ownerPhotoURL: string;
 
-    isFollowingOwner: boolean;
-    isBookmarked: boolean;
-    isLiked: boolean;
-    isViewed: boolean;
+    isFollowingOwner?: boolean;
+    isBookmarked?: boolean;
+    isLiked?: boolean;
+    isViewed?: boolean;
 
-    numLikes: number;
-    numComments: number;
-    numLinks: number;
-    numViews: number;
+    numLikes?: number;
+    numComments?: number;
+    numLinks?: number;
+    numViews?: number;
 
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 
     content: string;
-    links: string[];
+    links?: string[];
 }
 
 export type { TweetInterface }
