@@ -9,7 +9,6 @@ import UseAppStore from '../../../stores/App';
 
 // MUI
 import LoadingButton from '@mui/lab/LoadingButton';
-import TouchRipple from '@mui/material/ButtonBase/TouchRipple';
 
 const FollowButton: React.FC<{ userToFollowUID: string }> = ({ userToFollowUID }) => {
 
@@ -82,12 +81,10 @@ const FollowButton: React.FC<{ userToFollowUID: string }> = ({ userToFollowUID }
         {isFollowing ? 
             <LoadingButton loading={isProcessingFollow} variant="outlined" onClick={handleUnfollow}>
                 Unfollow
-                <TouchRipple center/>
             </LoadingButton>
             :
             <LoadingButton loading={isProcessingFollow} variant="contained" onClick={handleFollow}>
                 Follow
-                <TouchRipple center/>
             </LoadingButton>
         }
         </>

@@ -32,7 +32,7 @@ export default function App() {
   const { sendWS } = wsCtx;
 
   const { currentContent, openNewTweet, isSnackOpen, snackMessage, snackSeverity: snakcSeverity, openSnack, closeSnack} = UseAppStore();
-  const { signIn, setIsLoadingProfile, setFollowingUsers } = UseUserStore();
+  const { signIn, setIsLoadingProfile, setFollowingUsers, setBookmarkedTweets, setLikedTweets } = UseUserStore();
 
 
   const pullMetadata = () => {
@@ -44,6 +44,8 @@ export default function App() {
         .then((r) => {
           if (r.error !== "null" || r.followingUsers === undefined) throw new Error(r.error);
           if (r.followingUsers) setFollowingUsers(r.followingUsers);
+          if (r.bookmarkedTweets) setBookmarkedTweets(r.bookmarkedTweets);
+          if (r.likedTweets) setLikedTweets(r.likedTweets);
         })
         .catch((error) => {
           log.error("Error pulling metadata: ", error);

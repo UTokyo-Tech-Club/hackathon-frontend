@@ -10,6 +10,8 @@ type User = {
     photoURL: string;
 
     followingUsers: string[];
+    bookmarkedTweets: string[];
+    likedTweets: string[];
 
     isLoadingProfile: boolean;
 
@@ -24,6 +26,14 @@ type User = {
     removeFollowingUser: (uid: string) => void;
     setFollowingUsers: (uids: string[]) => void;
 
+    addBookmarkedTweet: (tweetUID: string) => void;
+    removeBookmarkedTweet: (tweetUID: string) => void;
+    setBookmarkedTweets: (tweetUIDs: string[]) => void;
+
+    addLikedTweet: (tweetUID: string) => void;
+    removeLikedTweet: (tweetUID: string) => void;
+    setLikedTweets: (tweetUIDs: string[]) => void;
+
     setIsLoadingProfile: (isLoading: boolean) => void;
 }
 
@@ -35,6 +45,8 @@ const UseUserStore = create<User>((set) => ({
     photoURL: '',
 
     followingUsers: [],
+    bookmarkedTweets: [],
+    likedTweets: [],
 
     isLoadingProfile: true,
 
@@ -51,6 +63,14 @@ const UseUserStore = create<User>((set) => ({
     addFollowingUser: (uid) => set((state) => ({ followingUsers: [...state.followingUsers, uid] })),
     removeFollowingUser: (uid) => set((state) => ({ followingUsers: state.followingUsers.filter((u) => u !== uid) })),
     setFollowingUsers: (uids) => set({ followingUsers: uids }),
+
+    addBookmarkedTweet: (tweetUID) => set((state) => ({ bookmarkedTweets: [...state.bookmarkedTweets, tweetUID] })),
+    removeBookmarkedTweet: (tweetUID) => set((state) => ({ bookmarkedTweets: state.bookmarkedTweets.filter((t) => t !== tweetUID) })),
+    setBookmarkedTweets: (tweetUIDs) => set({ bookmarkedTweets: tweetUIDs }),
+
+    addLikedTweet: (tweetUID) => set((state) => ({ likedTweets: [...state.likedTweets, tweetUID] })),
+    removeLikedTweet: (tweetUID) => set((state) => ({ likedTweets: state.likedTweets.filter((t) => t !== tweetUID) })),
+    setLikedTweets: (tweetUIDs) => set({ likedTweets: tweetUIDs }),
 
     setIsLoadingProfile: (isLoading) => set({ isLoadingProfile: isLoading })
 }));

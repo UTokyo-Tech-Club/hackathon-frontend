@@ -79,7 +79,7 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
                     </Stack>
 
                     {/* Metadata */}
-                    <Metadata />
+                    <Metadata tweetUID={tweetData.uid} />
                 </Stack>
 
                 {/* Links */}

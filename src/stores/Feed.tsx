@@ -13,6 +13,9 @@ type FeedStore = {
     updateTweet: (tweet: TweetInterface) => void;
     removeTweet: (tweet: TweetInterface) => void;
     addTweetMapInstance: (uid: string, instance: EditorJS) => void;
+
+    incrementLikes: (tweetUID: string) => void;
+    decrementLikes: (tweetUID: string) => void;
 }
 
 const UseFeedStore = create<FeedStore>((set) => ({
@@ -26,6 +29,9 @@ const UseFeedStore = create<FeedStore>((set) => ({
     updateTweet: (tweet) => set((state) => ({ tweets: state.tweets.map((t) => (t.uid === tweet.uid ? tweet : t)), lastUpdatedUID: tweet.uid })),
     removeTweet: (tweet) => set((state) => ({ tweets: state.tweets.filter((t) => t.uid !== tweet.uid) })),
     addTweetMapInstance: (uid, instance) => set((state) => ({ tweetMapInstance: state.tweetMapInstance.set(uid, instance) })),
+
+    incrementLikes: (tweetUID) => set((state) => ({ tweets: state.tweets.map((t) => (t.uid === tweetUID ? { ...t, numLikes: (t.numLikes ?? 0) + 1 } : t)) })),
+    decrementLikes: (tweetUID) => set((state) => ({ tweets: state.tweets.map((t) => (t.uid === tweetUID ? { ...t, numLikes: (t.numLikes ?? 0) - 1 } : t)) })),
 }));
 
 export default UseFeedStore;

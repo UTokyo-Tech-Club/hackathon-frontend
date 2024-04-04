@@ -57,54 +57,6 @@ const Post: React.FC = () => {
                 return;
             })
             .finally(() => {
-
-                // sendWS<{ 
-                //     error: string, 
-                //     data: { 
-                //         uid: string, 
-                //         ownerUID: string, 
-                //         ownerUsername: string,
-                //         ownerPhotoURL: string,
-                //         content: object, 
-                //         createdAt: string, 
-                //         updatedAt: string 
-                //     }}>({ 
-                //         type: "tweet", 
-                //         action: "get_newest", 
-                //         data: {
-                //             index: 0
-                //         }
-                //     })
-                //     .then((r) => {
-                //         if (r.error !== "null" || r.data === undefined) throw new Error(r.error);
-        
-                //         if (!r.data.content) return;
-        
-                //         const tweetData: TweetInterface = {
-                //             uid: r.data.uid,
-                //             ownerUID: r.data.ownerUID,
-                //             ownerUsername: r.data.ownerUsername,
-                //             ownerPhotoURL: r.data.ownerPhotoURL,
-                //             isFollowingOwner: false,
-                //             isBookmarked: false,
-                //             isLiked: false,
-                //             isViewed: false,
-                //             numLikes: 0,
-                //             numComments: 0,
-                //             numLinks: 0,
-                //             numViews: 0,
-                //             createdAt: new Date(),
-                //             updatedAt: new Date(),
-                //             content: JSON.stringify(r.data.content),
-                //             links: [],
-                //         }
-                
-                //         addTweetFront(tweetData);
-                //     })
-                //     .catch((error) => {
-                //         log.error("Error getting tweet: ", error);
-                //     })
-
                 setIsProcessing(false);
             });
     }

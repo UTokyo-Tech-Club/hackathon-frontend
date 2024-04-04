@@ -16,7 +16,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const WS_URL = import.meta.env.VITE_WS_URI;
 
     const { openSnack } = UseAppStore();
-    const { addTweetFront, updateTweet } = UseFeedStore();
+    const { addTweetFront, updateTweet, incrementLikes, decrementLikes } = UseFeedStore();
 
     // Custom hook to send and receive WebSocket messages
     const { sendJsonMessage, getWebSocket } = useWebSocket(WS_URL, {
@@ -36,10 +36,6 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
                     ownerUID: msg["data"]["ownerUID"],
                     ownerUsername: msg["data"]["ownerUsername"],
                     ownerPhotoURL: msg["data"]["ownerPhotoURL"],
-                    isFollowingOwner: false,
-                    isBookmarked: false,
-                    isLiked: false,
-                    isViewed: false,
                     numLikes: 0,
                     numComments: 0,
                     numLinks: 0,
@@ -56,6 +52,14 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
                 if (msg["action"] === "edit") {
                     updateTweet(tweetData)
+                }
+
+                if (msg["action"] === "like") {
+                    incrementLikes(msg["data"]["tweetUID"])
+                }
+
+                if (msg["action"] === "unlike") {
+                    decrementLikes(msg["data"]["tweetUID"])
                 }
             }
 

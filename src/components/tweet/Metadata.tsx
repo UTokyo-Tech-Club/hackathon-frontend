@@ -1,52 +1,44 @@
+import React from 'react';
+import BookmarkButton from '../profile/services/Bookmark';
+import LikeButton from '../profile/services/Like';
 
 // MUI
 import AddCommentIcon from '@mui/icons-material/AddComment';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Typography from '@mui/material/Typography';
 
-const Metadata = () => {
+const Metadata: React.FC<{ tweetUID: string }> = ({ tweetUID }) => {
 
     return (
         <Stack>
-            <Button sx={{ mt: 1 }}>
-                {false ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-            </Button>
+            <BookmarkButton tweetUID={tweetUID} />
 
             <Stack height="100%" justifyContent="space-around">
-                <Button>
-                    <Stack>
-                        {false ? <FavoriteIcon />: <FavoriteBorderIcon />} 
-                        <Typography variant="body2">4</Typography>
-                    </Stack>
-                </Button>
+                <LikeButton tweetUID={tweetUID} />
 
-                <Button>
+                <LoadingButton>
                     <Stack>
                         <AddCommentIcon />
                         <Typography variant="body2">4</Typography>
                     </Stack>
-                </Button>
+                </LoadingButton>
 
-                <Button>
+                <LoadingButton>
                     <Stack>
                         <ImportExportIcon />
                         <Typography variant="body2">4</Typography>
                     </Stack>
-                </Button>
+                </LoadingButton>
 
-                <Button>
+                <LoadingButton>
                     <Stack>
                         <VisibilityIcon />
                         <Typography variant="body2">4</Typography>
                     </Stack>
-                </Button>
+                </LoadingButton>
             </Stack>
 
         </Stack>
