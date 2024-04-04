@@ -4,9 +4,10 @@ import useWebSocket from 'react-use-websocket';
 import UseAppStore from '../stores/App';
 import { TweetInterface } from '../interfaces/Tweet';
 import UseFeedStore from '../stores/Feed';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface WebSocketContextType {
-    sendWS: <T>(message: object) => Promise<T>;
+    sendWS: <T>(message: { [key: string]: any }) => Promise<T>;
 }
 
 export const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined);
@@ -24,6 +25,8 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         onClose: () => log.warn('WebSocket connection closed'),
         onMessage: (event) => {
             const msg = JSON.parse(event.data)
+
+            if (msg["source"] !== "server") return;
 
             if (msg["type"] === "user" && msg["action"] === "follow") {
                 openSnack("New Follower!", "info")
@@ -70,8 +73,12 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         },
     });
 
-    async function sendWS<T>(message: object): Promise<T> {
+    async function sendWS<T>(message: { [key: string]: any }): Promise<T> {
         return new Promise((resolve, reject) => {
+
+            // A signle-use uid is generated for each message to insure that the correct response is handled
+            const uid = uuidv4();
+            message["data"] = { ...message["data"], source: uid };
             
             // Handles incoming JSON message
             // Resolves or rejects the promise based on the message content
@@ -79,7 +86,9 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             const handleMessage = (event: any) => {
                 try {
                     const response = JSON.parse(event.data);
-                    if (response["type"] === undefined && response["action"] === undefined) { // Ignore broadcast messages
+                    if (response["source"] !== uid) return;
+
+                    if (response["type"] === undefined && response["action"] === undefined || response["error"] !== undefined) { // Ignore broadcast messages
                         resolve(response)
                     }
                 } catch (error) {

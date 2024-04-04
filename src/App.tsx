@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import './App.css'
 import { authApp } from './firebase/config'
 import { getToken } from './firebase/auth'
@@ -21,6 +21,30 @@ import { Stack } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
+const useScrollDirection = () => {
+  const [scrollDirection, setScrollDirection] = useState('up');
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const updateScrollDirection = () => {
+      const scrollY = window.scrollY;
+      const direction = scrollY > lastScrollY ? 'down' : 'up';
+      // if (direction !== scrollDirection && (scrollY - lastScrollY > 1 || scrollY - lastScrollY < -1)) {
+        setScrollDirection(direction);
+        lastScrollY = scrollY > 0 ? scrollY : 0;
+      // }
+    };
+
+    window.addEventListener('scroll', updateScrollDirection);
+    return () => {
+      window.removeEventListener('scroll', updateScrollDirection);
+    };
+  }, [scrollDirection]);
+
+  return scrollDirection;
+}
+
 export default function App() {
 
   log.setLevel(log.levels.DEBUG);
@@ -34,6 +58,9 @@ export default function App() {
   const { currentContent, openNewTweet, isSnackOpen, snackMessage, snackSeverity: snakcSeverity, openSnack, closeSnack} = UseAppStore();
   const { signIn, setIsLoadingProfile, setFollowingUsers, setBookmarkedTweets, setLikedTweets } = UseUserStore();
 
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+
+  const scrollDirection = useScrollDirection();
 
   const pullMetadata = () => {
     setTimeout(() => {
@@ -42,6 +69,7 @@ export default function App() {
         action: "pull_metadata",
       })
         .then((r) => {
+          console.log(r)
           if (r.error !== "null" || r.followingUsers === undefined) throw new Error(r.error);
           if (r.followingUsers) setFollowingUsers(r.followingUsers);
           if (r.bookmarkedTweets) setBookmarkedTweets(r.bookmarkedTweets);
@@ -110,13 +138,37 @@ export default function App() {
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    // Function to update the state based on the viewport width
+    const handleResize = () => {
+      if (window.innerWidth < 768) { // Assuming 768px is the narrow width threshold
+        setIsSidebarVisible(false);
+      } else {
+        setIsSidebarVisible(true);
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+
+    // Call the function to set the initial state
+    handleResize();
+
+    // Cleanup function to remove the event listener
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <GradientBackground>
       <Stack direction="row" justifyContent="center">
         {/* Sidebar */}
-        <div className='sidebar'>
-          <Profile />
-        </div>  
+          {/* Desktop */}
+        {isSidebarVisible &&
+          <div className='sidebar'>
+            <Profile />
+          </div>  
+        }
+          {/* Mobile */}
 
         {/* Main Content */}
         <Container maxWidth="sm" sx={{ mx: 0 }}>
@@ -124,12 +176,33 @@ export default function App() {
         </Container>
 
         {/* Sidebar */}
-        <div className='sidebar'>
-          {/* New Tweet Button */}
-          <Fab color="secondary" sx={{ alignSelf: "flex-end" }} onClick={openNewTweet}>
-            <EditIcon />
-          </Fab>
-        </div>
+        {isSidebarVisible ?
+          <>
+          {/* Desktop */}
+          <div className='sidebar'>
+            {/* New Tweet Button */}
+            <Fab color="secondary" sx={{ alignSelf: "flex-end" }} onClick={openNewTweet}>
+              <EditIcon />
+            </Fab>
+          </div>
+          </>
+          :
+          <>
+          {/* Mobile */}
+          {scrollDirection !== 'down' &&
+            <Fab color="secondary" style={{ position: 'fixed', top: "90vh", right: 16 }} onClick={openNewTweet}>
+              <EditIcon />
+            </Fab>
+          }
+          {/* <div style={{ 
+            transition: 'transform 0.3s ease-out', 
+            // transform: scrollDirection === 'down' ? 'scale(0)' : 'scale(1)' 
+          }}>
+          </div> */}
+          </>
+        }
+
+
       </Stack>
 
       {/* New Tweet Dialog */}
@@ -139,10 +212,12 @@ export default function App() {
       <EditTweet />
 
       {/* Footer */}
-      <Copyright />
+      {isSidebarVisible &&
+        <Copyright />
+      }
 
       {/* Snackbar */}
-      <Snackbar open={isSnackOpen} autoHideDuration={3000} onClose={closeSnack}>
+      <Snackbar open={isSnackOpen} autoHideDuration={2000} onClose={closeSnack}>
         <Alert onClose={closeSnack} severity={snakcSeverity}>
           {snackMessage}
         </Alert>

@@ -1,3 +1,4 @@
+import React from 'react';
 import Edit from './edit';
 import SidebarIcon from './SidebarIcon';
 import SidebarPopup from './SidebarPopup';
@@ -5,7 +6,7 @@ import SidebarPopup from './SidebarPopup';
 // MUI
 import Container from '@mui/material/Container';
 
-const Profile = () => {
+const Profile: React.FC = () => {
 
     return (
         <>
