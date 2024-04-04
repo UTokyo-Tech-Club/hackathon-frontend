@@ -18,7 +18,7 @@ const Feed = () => {
 
     const loaderRef = useRef(null);
 
-    const { tweets, addTweet } = UseFeedStore();
+    const { tweets, lastTweetAddMethod, addTweet } = UseFeedStore();
 
     const [isLocked, setIsLocked] = useState(false);
 
@@ -102,10 +102,12 @@ const Feed = () => {
     }, [fetchMoreData]);
 
     useEffect(() => {
-        setIsVisible(false);
-        setTimeout(() => {
-            setIsVisible(true);
-        }, 10);
+        if (lastTweetAddMethod === "front") {
+            setIsVisible(false);
+            setTimeout(() => {
+                setIsVisible(true);
+            }, 10);
+        }
     }, [tweets]);
 
     return (
@@ -113,7 +115,7 @@ const Feed = () => {
         {isVisible && 
             <Container>
                 {tweets.map((item, index) => (
-                    <Tweet key={index} tweet={item} />
+                    <Tweet key={index} tweetData={item} />
                 ))}
                 <div ref={loaderRef}></div>
                 <GradientCircularProgress />

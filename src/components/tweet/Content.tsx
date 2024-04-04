@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import EditorJS, { EditorConfig, BlockToolConstructable } from '@editorjs/editorjs';
-import { v4 as uuidv4 } from 'uuid';
-import log from 'loglevel';
+import EditorJS, { EditorConfig } from '@editorjs/editorjs';
+import EditorTools from '../../utils/editor/EditorTools';
+import UseFeedStore from '../../stores/Feed';
 //@ts-ignore
 import Header from "@editorjs/header";
 //@ts-ignore
@@ -35,79 +35,29 @@ import ChecklistTool from "@editorjs/checklist";
 //@ts-ignore
 import AlignmentTuneTool from "editorjs-text-alignment-blocktune";
 
-const Content: React.FC<{ data: string }> = ({ data }) => {
+const Content: React.FC<{ tweetUID: string, data: string }> = ({ tweetUID, data }) => {
     const ejInstance = useRef<EditorJS | null>(null);
 
-    const uid = uuidv4();
+    const { addTweetMapInstance } = UseFeedStore();
 
     useEffect(() => {
         if (!ejInstance.current) {
-            // Define the editor configuration with the correct type
             const editorConfig: EditorConfig = {
                 readOnly: true,
                 defaultBlock: "embed",
-                holder: uid,
+                holder: tweetUID,
                 minHeight: 10,
-                tools: {
-                    header: {
-                        class: Header as unknown as BlockToolConstructable,
-                        // config: {
-                        //         placeholder: "Header...",
-                        //     } as CustomHeaderConfig,
-                        // inlineToolbar: true,
-                        tunes: ["textAlignment"],
-                    },
-                    list: {
-                        class: ListTool,
-                        // inlineToolbar: true,
-                        config: {
-                            defaultStyle: 'unordered'
-                        },
-                        tunes: ['textAlignment'],
-                    },
+                tools: EditorTools,
+                data: JSON.parse(data),
 
-                    paragraph: {
-                        class: ParagraphTool,
-                        // inlineToolbar: true,
-                        tunes: ["textAlignment"],
-                        // config: {
-                        //     placeholder: "Write...",
-                        // },
-                    },
-
-                    raw: RawTool,
-                    code: CodeTool,
-                    embed: EmbedTool,
-                    quote: QuoteTool,
-                    warning: WarningTool,
-                    table: TableTool,
-                    marker: MarkerTool,
-                    inlineCode: InlineCodeTool,
-                    delimiter: DelimiterTool,
-                    checklist: ChecklistTool,
-                    textAlignment: {
-                        class: AlignmentTuneTool,
-                        config: {
-                            default: "left",
-                            blocks: {
-                                header: "left",
-                                list: "left",
-                            },
-                        }, 
-                    },
-                },
                 onReady: () => {
+                    if (ejInstance.current) {
+                        addTweetMapInstance(tweetUID, ejInstance.current);
+                    }
                 },
                 onChange: async () => {
-                    if (ejInstance.current) {
-                        // let saved = await ejInstance.current.save();
-                        // log.info(saved['blocks']);
-                        return
-                    }
-                    log.error('Editor.js instance is not available')
                 },
 
-                data: JSON.parse(data)
             };
 
             const editor = new EditorJS(editorConfig);
@@ -115,16 +65,9 @@ const Content: React.FC<{ data: string }> = ({ data }) => {
             ejInstance.current = editor;
         }
 
-        // Cleanup function to destroy the editor when the component unmounts
-        // return () => {
-        //     if (ejInstance.current) {
-        //         ejInstance.current.destroy();
-        //         ejInstance.current = null;
-        //     }
-        // };
     }, []);
 
-    return <div id={uid}></div>;
+    return <div id={tweetUID}></div>;
 };
 
 export default Content

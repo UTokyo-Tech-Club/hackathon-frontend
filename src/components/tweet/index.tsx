@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TweetInterface } from "../../interfaces/Tweet";
 import Content from './Content';
 import Link from './link';
@@ -6,7 +6,7 @@ import Metadata from './Metadata';
 import FollowButton from '../profile/services/Follow';
 import UseAppStore from '../../stores/App';
 import UseTweetStore from '../../stores/Tweet';
-
+import UseFeedStore from '../../stores/Feed';
 
 // MUI
 import Box from '@mui/material/Box';
@@ -20,20 +20,31 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 
 
-const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
+const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
 
     const { uid } = UseUserStore();
-    
-    const isUserOwner = tweet.ownerUID === uid;
+
+    const { tweets, tweetMapInstance, lastUpdatedUID } = UseFeedStore();
 
     const { openEditTweet } = UseAppStore();
     const { setContent, setTweetUID } = UseTweetStore();
+
+    var tweet = tweets.filter((t) => t.uid === tweetData.uid)[0];
+    
+    const isUserOwner = tweet.ownerUID === uid;
 
     const handleEdit = () => {
         setTweetUID(tweet.uid);
         setContent(tweet.content);
         openEditTweet();
     }
+
+    useEffect(() => {
+        if (tweetData.uid === lastUpdatedUID) {
+            tweetMapInstance.get(tweet.uid)?.blocks.clear();
+            tweetMapInstance.get(tweet.uid)?.blocks.insertMany(JSON.parse(tweet.content).blocks);
+        }
+    }, [tweets])
 
     return (
         <Paper elevation={1} sx={{ my: 2 }}>
@@ -63,7 +74,7 @@ const Tweet: React.FC<{ tweet: TweetInterface }> = ({ tweet }) => {
 
                         {/* Editor.js */}
                         <Box>
-                            <Content data={tweet.content}/>
+                            <Content tweetUID={tweet.uid} data={tweet.content}/>
                         </Box>
                     </Stack>
 
