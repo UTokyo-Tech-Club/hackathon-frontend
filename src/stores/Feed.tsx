@@ -16,6 +16,8 @@ type FeedStore = {
 
     incrementLikes: (tweetUID: string) => void;
     decrementLikes: (tweetUID: string) => void;
+
+    resetLastTweetAddMethod: () => void;
 }
 
 const UseFeedStore = create<FeedStore>((set) => ({
@@ -32,6 +34,8 @@ const UseFeedStore = create<FeedStore>((set) => ({
 
     incrementLikes: (tweetUID) => set((state) => ({ tweets: state.tweets.map((t) => (t.uid === tweetUID ? { ...t, numLikes: (t.numLikes ?? 0) + 1 } : t)) })),
     decrementLikes: (tweetUID) => set((state) => ({ tweets: state.tweets.map((t) => (t.uid === tweetUID ? { ...t, numLikes: (t.numLikes ?? 0) - 1 } : t)) })),
+
+    resetLastTweetAddMethod: () => set(() => ({ lastTweetAddMethod: "back" })),
 }));
 
 export default UseFeedStore;

@@ -18,7 +18,7 @@ const Feed = () => {
 
     const loaderRef = useRef(null);
 
-    const { tweets, lastTweetAddMethod, addTweet } = UseFeedStore();
+    const { tweets, lastTweetAddMethod, resetLastTweetAddMethod, addTweet } = UseFeedStore();
 
     const [isLocked, setIsLocked] = useState(false);
 
@@ -104,6 +104,7 @@ const Feed = () => {
 
     useEffect(() => {
         if (lastTweetAddMethod === "front") {
+            resetLastTweetAddMethod();
             setIsVisible(false);
             setTimeout(() => {
                 setIsVisible(true);

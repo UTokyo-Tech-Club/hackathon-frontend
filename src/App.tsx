@@ -162,13 +162,23 @@ export default function App() {
     <GradientBackground>
       <Stack direction="row" justifyContent="center">
         {/* Sidebar */}
+        {isSidebarVisible ?
+          <>
           {/* Desktop */}
-        {isSidebarVisible &&
           <div className='sidebar'>
             <Profile />
           </div>  
-        }
+          </>
+          :
+          <>
           {/* Mobile */}
+          {scrollDirection !== 'down' &&
+            <Container style={{ position: 'fixed', top: "80vh", left: 8 }}>
+              <Profile />
+            </Container>
+          }
+          </>
+        }
 
         {/* Main Content */}
         <Container maxWidth="sm" sx={{ mx: 0 }}>
@@ -190,7 +200,7 @@ export default function App() {
           <>
           {/* Mobile */}
           {scrollDirection !== 'down' &&
-            <Fab color="secondary" style={{ position: 'fixed', top: "90vh", right: 16 }} onClick={openNewTweet}>
+            <Fab color="secondary" style={{ position: 'fixed', top: "80vh", right: 16 }} onClick={openNewTweet}>
               <EditIcon />
             </Fab>
           }
