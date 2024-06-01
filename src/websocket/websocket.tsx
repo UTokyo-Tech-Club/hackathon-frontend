@@ -12,7 +12,6 @@ export interface WebSocketContextType {
 
 export const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined);
 
-
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const WS_URL = import.meta.env.VITE_WS_URI;
 
