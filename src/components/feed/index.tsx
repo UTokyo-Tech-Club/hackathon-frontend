@@ -20,7 +20,7 @@ const Feed = () => {
 
     const { tweets, lastTweetAddMethod, resetLastTweetAddMethod, addTweet } = UseFeedStore();
 
-    const [isLocked, setIsLocked] = useState(false);
+    const [isLocked, setIsLocked] = useState(true);
 
     const [isVisible, setIsVisible] = useState(true);
 

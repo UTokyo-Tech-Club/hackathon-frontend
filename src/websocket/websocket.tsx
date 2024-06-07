@@ -95,6 +95,8 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
                 }
             };
 
+            log.info("sending", message);
+
             sendJsonMessage(message);
 
             const ws = getWebSocket();

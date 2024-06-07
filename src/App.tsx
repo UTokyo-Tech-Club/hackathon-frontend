@@ -87,6 +87,15 @@ export default function App() {
     const unsubscribe = authApp.onAuthStateChanged(async (user) => {
       if (user) {
         setIsLoadingProfile(true);
+
+        const timeoutId = setTimeout(() => {
+          const error = new Error("Authentication response timeout");
+          log.error("Error sending auth to backend: ", error);
+          openSnack("Failed to Sign In", "error");
+          setIsLoadingProfile(false);
+
+        }, 1000);
+
         sendWS<{ error: string }>({ 
           type: "user", 
           action: "auth",
@@ -95,10 +104,11 @@ export default function App() {
           }
         })
           .then((r) => {
+            clearTimeout(timeoutId);
             if (r.error !== "null") throw new Error(r.error);
             signIn(user as any);
             log.info("Front & backend signed in as ", user.uid);
-            openSnack("Wellcome " + user.displayName + "!", "success");
+            openSnack("Welcome " + user.displayName + "!", "success");
           })
           .catch((error) => {
             log.error("Error sending auth to backend: ", error);
@@ -110,11 +120,13 @@ export default function App() {
           });
       } else {
         setIsLoadingProfile(false);
-        log.warn("No user is signed in")
+        log.warn("No user is signed in");
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
