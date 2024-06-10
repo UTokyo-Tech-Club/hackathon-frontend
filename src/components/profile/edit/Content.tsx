@@ -17,32 +17,32 @@ const Content: React.FC = () => {
     return (
         <>
             {/* Username */}
-            <TextField 
-            required 
-            error={username.length < minUsernameLength}
-            helperText={username.length < minUsernameLength ? "3文字以上を入力してください" : ""}
-            label="Username" 
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            inputProps={{ maxLength: 20 }}
-            sx={{ width: "50%", m: 2 }} />
+            <TextField
+                required
+                error={username.length < minUsernameLength}
+                helperText={username.length < minUsernameLength ? "3文字以上を入力してください" : ""}
+                label="ユーザー名"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                inputProps={{ maxLength: 20 }}
+                sx={{ width: "50%", m: 2 }} />
 
             {/* Email */}
-            <TextField 
-                required 
+            <TextField
+                required
                 disabled
-                label="Email" 
+                label="メール"
                 defaultValue={email}
                 sx={{ width: "50%", m: 2 }} />
 
             {/* Bio */}
             <Container sx={{ mt: 1 }}>
                 <Typography variant="body2" sx={{ ml: 1 }}>
-                    Bio
+                    自己紹介
                 </Typography>
                 <Divider orientation="horizontal" variant="fullWidth" sx={{ my: 0.5 }} />
             </Container>
-            <Container sx={{ minHeight: "30vh", ml: 1, width: "95%"}}>
+            <Container sx={{ minHeight: "30vh", ml: 1, width: "95%" }}>
                 <Editor />
             </Container>
         </>

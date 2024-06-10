@@ -44,12 +44,12 @@ const Edit: React.FC = () => {
 
     const updateBackendProfile = async () => {
 
-        sendWS<{ error: string }>({ 
-            type: "user", 
+        sendWS<{ error: string }>({
+            type: "user",
             action: "edit",
-            data: { 
-                username: username, 
-                photoURL: photoURL, 
+            data: {
+                username: username,
+                photoURL: photoURL,
                 profileContent: content
             }
         })
@@ -70,11 +70,11 @@ const Edit: React.FC = () => {
         setIsProcessing(true);
         Promise.all([updateFirebaseProfile(), updateBackendProfile()])
             .then(() => {
-                openSnack("Profile Updated!", "success");
+                openSnack("プロフィールがアップデートされました!", "success");
                 handleClose();
             })
             .catch((error) => {
-                openSnack("Please Retry...", "error");
+                openSnack("エラー...", "error");
                 log.error("Error updating profile: ", error)
             })
             .finally(() => {
@@ -86,8 +86,8 @@ const Edit: React.FC = () => {
         if (!isEditProfileOpen || content) return;
 
         setIsProcessing(true);
-        sendWS<{ data: { content: object }, error: string }>({ 
-            type: "user", 
+        sendWS<{ data: { content: object }, error: string }>({
+            type: "user",
             action: "get_profile_content"
         })
             .then((r) => {
@@ -96,7 +96,7 @@ const Edit: React.FC = () => {
             })
             .catch((error) => {
                 log.error("Error getting profile content: ", error);
-                openSnack("Error Getting Profile", "error");
+                openSnack("エラー", "error");
             })
             .finally(() => {
                 setIsProcessing(false);
@@ -109,7 +109,7 @@ const Edit: React.FC = () => {
             <ClickAwayListener onClickAway={handleClose}>
                 <Paper>
                     {/* Header */}
-                    <Appbar handleClose={handleClose} handleSave={handleSave}/>
+                    <Appbar handleClose={handleClose} handleSave={handleSave} />
 
                     <Stack>
                         {/* Profile Picture */}

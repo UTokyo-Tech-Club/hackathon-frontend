@@ -1,4 +1,5 @@
 import { TweetInterface } from "../../../interfaces/Tweet";
+import Content from './Content';
 
 // MUI
 import Typography from '@mui/material/Typography';
@@ -6,11 +7,10 @@ import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
-import PersonIcon from '@mui/icons-material/Person';
 import Box from '@mui/material/Box';
 
-
-const Link: React.FC<{ prev: boolean, tweet?: TweetInterface }> = ({ prev }) => {
+const Link: React.FC<{ prev: boolean, tweet?: TweetInterface }> = ({ prev, tweet }) => {
+    if (!tweet) return <></>;
     return (
         <Box
             sx={{
@@ -21,27 +21,31 @@ const Link: React.FC<{ prev: boolean, tweet?: TweetInterface }> = ({ prev }) => 
                                     "profileIcon profileName"
                                     ". content"`,
                 gridTemplateColumns: '50px auto',
+                gridTemplateRows: '40px auto',
+                alignItems: 'center', // Ensure all items are vertically centered
             }}
-            >
-            <Box sx={{ gridArea: 'linkDirection', display: 'flex', justifyContent: 'center', my: 0.2}}>
+        >
+            <Box sx={{ gridArea: 'linkDirection', display: 'flex', justifyContent: 'center' }}>
                 {prev ? <KeyboardDoubleArrowUpIcon /> : <KeyboardDoubleArrowDownIcon />}
             </Box>
-            <Box sx={{ gridArea: 'linkText', display: 'flex', justifyContent: 'flex-start', }}>
-                <Typography alignSelf="center" variant="body2">Link Text ...</Typography>
+            <Box sx={{ gridArea: 'linkText', display: 'flex', justifyContent: 'flex-start', my: 1 }}>
+                <Typography variant="body2">Link Text ...</Typography>
             </Box>
-            <Box sx={{ gridArea: 'divider'}}>
+            <Box sx={{ gridArea: 'divider' }}>
                 <Divider variant="fullWidth" />
             </Box>
-            <Box sx={{ gridArea: 'profileIcon', display: 'flex', justifyContent: 'center', my: 0.5}}>
-                <Avatar sx={{ width: 32, height: 32}}>
-                    <PersonIcon />
-                </Avatar>
+            <Box sx={{ gridArea: 'profileIcon', display: 'flex', justifyContent: 'center' }}>
+                <Avatar sx={{ width: 32, height: 32, mt: 1 }} src={tweet?.ownerPhotoURL} alt={tweet?.ownerUsername} />
             </Box>
-            <Box sx={{ gridArea: 'profileName', display: 'flex', justifyContent: 'flex-start'}}>
-                <Typography alignSelf="center" variant="body2">User B</Typography>
+            <Box sx={{ gridArea: 'profileName', display: 'flex', justifyContent: 'flex-start' }}>
+                <Typography variant="body2">{tweet?.ownerUsername}</Typography>
             </Box>
-            <Box sx={{ gridArea: 'content', display: 'flex', justifyContent: 'flex-start', mb: 1}}>
-                <Typography alignSelf="center" variant="body2">Some Text ...</Typography>
+            <Box sx={{ gridArea: 'content', display: 'flex', justifyContent: 'flex-start', mb: 1 }}>
+                {tweet && (
+                    <Box>
+                        <Content tweetUID={tweet?.uid + "link"} data={tweet?.content} />
+                    </Box>
+                )}
             </Box>
         </Box>
     );

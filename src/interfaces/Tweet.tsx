@@ -14,6 +14,8 @@ interface TweetInterface {
 
     content: string;
     links?: string[];
+    linksBack?: string[];
+    linksFront?: string[];
 }
 
 export type { TweetInterface }

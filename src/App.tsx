@@ -20,6 +20,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Stack } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import UsePostStore from "./stores/Post";
 
 const useScrollDirection = () => {
   const [scrollDirection, setScrollDirection] = useState('up');
@@ -30,9 +31,8 @@ const useScrollDirection = () => {
     const updateScrollDirection = () => {
       const scrollY = window.scrollY;
       const direction = scrollY > lastScrollY ? 'down' : 'up';
-      // if (direction !== scrollDirection && (scrollY - lastScrollY > 1 || scrollY - lastScrollY < -1)) {
-        setScrollDirection(direction);
-        lastScrollY = scrollY > 0 ? scrollY : 0;
+      setScrollDirection(direction);
+      lastScrollY = scrollY > 0 ? scrollY : 0;
       // }
     };
 
@@ -51,12 +51,13 @@ export default function App() {
 
   const wsCtx = useContext(WebSocketContext);
   if (!wsCtx) {
-      throw new Error('Context not found');
+    throw new Error('Context not found');
   }
   const { sendWS } = wsCtx;
 
-  const { currentContent, openNewTweet, isSnackOpen, snackMessage, snackSeverity: snakcSeverity, openSnack, closeSnack} = UseAppStore();
+  const { currentContent, openNewTweet, isSnackOpen, snackMessage, snackSeverity: snakcSeverity, openSnack, closeSnack } = UseAppStore();
   const { signIn, setIsLoadingProfile, setFollowingUsers, setBookmarkedTweets, setLikedTweets } = UseUserStore();
+  const { setLinkUid } = UsePostStore();
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
@@ -64,8 +65,8 @@ export default function App() {
 
   const pullMetadata = () => {
     setTimeout(() => {
-      sendWS<{ followingUsers: string[], likedTweets: string[], bookmarkedTweets: string[], error: string }>({ 
-        type: "user", 
+      sendWS<{ followingUsers: string[], likedTweets: string[], bookmarkedTweets: string[], error: string }>({
+        type: "user",
         action: "pull_metadata",
       })
         .then((r) => {
@@ -91,15 +92,15 @@ export default function App() {
         const timeoutId = setTimeout(() => {
           const error = new Error("Authentication response timeout");
           log.error("Error sending auth to backend: ", error);
-          openSnack("Failed to Sign In", "error");
+          openSnack("ログインエラー", "error");
           setIsLoadingProfile(false);
 
         }, 1000);
 
-        sendWS<{ error: string }>({ 
-          type: "user", 
+        sendWS<{ error: string }>({
+          type: "user",
           action: "auth",
-          data: { 
+          data: {
             token: await getToken(),
           }
         })
@@ -108,11 +109,11 @@ export default function App() {
             if (r.error !== "null") throw new Error(r.error);
             signIn(user as any);
             log.info("Front & backend signed in as ", user.uid);
-            openSnack("Welcome " + user.displayName + "!", "success");
+            openSnack("ようこそ " + user.displayName + "!", "success");
           })
           .catch((error) => {
             log.error("Error sending auth to backend: ", error);
-            openSnack("Failed to Sign In", "error");
+            openSnack("ログインエラー", "error");
           })
           .finally(() => {
             pullMetadata();
@@ -133,9 +134,9 @@ export default function App() {
     const pingWS = () => {
       if (!authApp.currentUser) return;
 
-      sendWS<{ data: string, error: string }>({ 
-          type: "sys", 
-          action: "ping"
+      sendWS<{ data: string, error: string }>({
+        type: "sys",
+        action: "ping"
       })
         .then((r) => {
           if (r.error !== "null" || r.data === undefined) throw new Error(r.error);
@@ -143,7 +144,7 @@ export default function App() {
         })
         .catch((error) => {
           log.error("Error sending ping to backend: ", error);
-          openSnack("Server Disconnected...", "error");
+          openSnack("サーバーが切断されました...", "error");
         });
     };
     const intervalId = setInterval(pingWS, 20000);
@@ -151,9 +152,8 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Function to update the state based on the viewport width
     const handleResize = () => {
-      if (window.innerWidth < 768) { // Assuming 768px is the narrow width threshold
+      if (window.innerWidth < 768) {
         setIsSidebarVisible(false);
       } else {
         setIsSidebarVisible(true);
@@ -176,51 +176,46 @@ export default function App() {
         {/* Sidebar */}
         {isSidebarVisible ?
           <>
-          {/* Desktop */}
-          <div className='sidebar'>
-            <Profile />
-          </div>  
+            {/* Desktop */}
+            <div className='sidebar'>
+              <Profile />
+            </div>
           </>
           :
           <>
-          {/* Mobile */}
-          {scrollDirection !== 'down' &&
-            <Container style={{ position: 'fixed', top: "80vh", left: 8 }}>
-              <Profile />
-            </Container>
-          }
+            {/* Mobile */}
+            {scrollDirection !== 'down' &&
+              <Container style={{ position: 'fixed', bottom: 16, left: 8 }}>
+                <Profile />
+              </Container>
+            }
           </>
         }
 
         {/* Main Content */}
         <Container maxWidth="sm" sx={{ mx: 0 }}>
-            { currentContent === 'feed' && <Feed /> }
+          {currentContent === 'feed' && <Feed />}
         </Container>
 
         {/* Sidebar */}
         {isSidebarVisible ?
           <>
-          {/* Desktop */}
-          <div className='sidebar'>
-            {/* New Tweet Button */}
-            <Fab color="secondary" sx={{ alignSelf: "flex-end" }} onClick={openNewTweet}>
-              <EditIcon />
-            </Fab>
-          </div>
+            {/* Desktop */}
+            <div className='sidebar'>
+              {/* New Tweet Button */}
+              <Fab color="primary" sx={{ alignSelf: "flex-end" }} onClick={() => { setLinkUid(''), openNewTweet(); }}>
+                <EditIcon />
+              </Fab>
+            </div>
           </>
           :
           <>
-          {/* Mobile */}
-          {scrollDirection !== 'down' &&
-            <Fab color="secondary" style={{ position: 'fixed', top: "80vh", right: 16 }} onClick={openNewTweet}>
-              <EditIcon />
-            </Fab>
-          }
-          {/* <div style={{ 
-            transition: 'transform 0.3s ease-out', 
-            // transform: scrollDirection === 'down' ? 'scale(0)' : 'scale(1)' 
-          }}>
-          </div> */}
+            {/* Mobile */}
+            {scrollDirection !== 'down' &&
+              <Fab color="primary" style={{ position: 'fixed', bottom: 16, right: 16 }} onClick={() => { setLinkUid(''), openNewTweet(); }}>
+                <EditIcon />
+              </Fab>
+            }
           </>
         }
 

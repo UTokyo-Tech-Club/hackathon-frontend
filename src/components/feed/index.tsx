@@ -20,7 +20,7 @@ const Feed = () => {
 
     const { tweets, lastTweetAddMethod, resetLastTweetAddMethod, addTweet } = UseFeedStore();
 
-    const [isLocked, setIsLocked] = useState(true);
+    const [isLocked, setIsLocked] = useState(false);
 
     const [isVisible, setIsVisible] = useState(true);
 
@@ -28,28 +28,31 @@ const Feed = () => {
         if (isLocked) return;
 
         setIsLocked(true);
-        sendWS<{ 
-            error: string, 
-            data: { 
-                uid: string, 
-                ownerUID: string, 
+        sendWS<{
+            error: string,
+            data: {
+                uid: string,
+                ownerUID: string,
                 ownerUsername: string,
                 ownerPhotoURL: string,
-                content: object, 
-                createdAt: string, 
+                content: object,
+                linksBack: string[],
+                linksFront: string[],
+                createdAt: string,
                 updatedAt: string,
 
                 numLikes: number,
                 numComments: number,
                 numLinks: number,
                 numViews: number,
-            }}>({ 
-                type: "tweet", 
-                action: "get_newest", 
-                data: {
-                    index: tweets.length
-                }
-            })
+            }
+        }>({
+            type: "tweet",
+            action: "get_newest",
+            data: {
+                index: tweets.length
+            }
+        })
             .then((r) => {
                 if (r.error !== "null" || r.data === undefined) throw new Error(r.error);
 
@@ -64,12 +67,14 @@ const Feed = () => {
                     numComments: r.data.numLikes ? r.data.numComments : 0,
                     numLinks: r.data.numLikes ? r.data.numLinks : 0,
                     numViews: r.data.numLikes ? r.data.numViews : 0,
+                    linksBack: r.data.linksBack ? r.data.linksBack : [],
+                    linksFront: r.data.linksFront ? r.data.linksFront : [],
                     createdAt: new Date(),
                     updatedAt: new Date(),
                     content: JSON.stringify(r.data.content),
                     links: [],
                 }
-        
+
                 addTweet(tweetData);
             })
             .catch((error) => {
@@ -113,18 +118,18 @@ const Feed = () => {
     }, [tweets]);
 
     return (
-    <>
-        {isVisible && 
-            <Container>
-                {tweets.map((item, index) => (
-                    <Tweet key={index} tweetData={item} />
-                ))}
-                <div ref={loaderRef}></div>
-                <GradientCircularProgress />
-            </Container>
-        }       
-    </>
-        
+        <>
+            {isVisible &&
+                <Container>
+                    {tweets.map((item, index) => (
+                        <Tweet key={index} tweetData={item} />
+                    ))}
+                    <div ref={loaderRef}></div>
+                    <GradientCircularProgress />
+                </Container>
+            }
+        </>
+
     );
 }
 

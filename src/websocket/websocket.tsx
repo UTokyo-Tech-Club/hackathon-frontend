@@ -25,10 +25,12 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         onMessage: (event) => {
             const msg = JSON.parse(event.data)
 
+            log.info("received", msg)
+
             if (msg["source"] !== "server") return;
 
             if (msg["type"] === "user" && msg["action"] === "follow") {
-                openSnack("New Follower!", "info")
+                openSnack("新しいフォロワーがいます！", "info")
             }
 
             if (msg["type"] === "tweet") {
@@ -78,7 +80,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             // A signle-use uid is generated for each message to insure that the correct response is handled
             const uid = uuidv4();
             message["data"] = { ...message["data"], source: uid };
-            
+
             // Handles incoming JSON message
             // Resolves or rejects the promise based on the message content
             // <T> should contain the expected response types

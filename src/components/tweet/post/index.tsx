@@ -29,7 +29,7 @@ const Post: React.FC = () => {
 
     const { username, photoURL } = UseUserStore();
 
-    const { content, setIsProcessing } = UsePostStore();
+    const { content, linkUid, setIsProcessing } = UsePostStore();
 
     useEffect(() => {
         if (!content) return;
@@ -39,21 +39,22 @@ const Post: React.FC = () => {
     const handlePublish = () => {
         setIsProcessing(true);
 
-        sendWS<{ error: string }>({ 
-            type: "tweet", 
-            action: "post", 
+        sendWS<{ error: string }>({
+            type: "tweet",
+            action: "post",
             data: {
-                content: content
+                content: content,
+                link: linkUid,
             }
         })
             .then((r) => {
                 if (r.error !== "null") throw new Error(r.error);
-                openSnack("Posted New Tweet!", "success");
+                openSnack("新規投稿を作成しました!", "success");
                 handleClose();
             })
             .catch((error) => {
                 log.error("Error sending tweet to backend: ", error);
-                openSnack("Failed to Post", "error");
+                openSnack("エラー", "error");
                 return;
             })
             .finally(() => {
@@ -70,13 +71,13 @@ const Post: React.FC = () => {
             <ClickAwayListener onClickAway={handleClose}>
                 <Paper>
                     {/* Header */}
-                    <Header handleClose={handleClose}/>
+                    <Header handleClose={handleClose} />
 
                     {/* Post Tweet */}
                     <Stack>
                         <Stack direction='row' sx={{ m: 1, p: 1, minHeight: "40vh" }}>
-                            <Avatar sx={{ width: 32, height: 32, m: 1, mr: 2}}>
-                                <img src={photoURL} alt={username} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> 
+                            <Avatar sx={{ width: 32, height: 32, m: 1, mr: 2 }}>
+                                <img src={photoURL} alt={username} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                             </Avatar>
                             {/* Editor */}
                             <Editor />
@@ -84,12 +85,12 @@ const Post: React.FC = () => {
 
                         {/* Footer */}
                         <Divider variant="middle" />
-                        <Footer isContentValid={isContentValid} handlePublish={handlePublish}/>
+                        <Footer isContentValid={isContentValid} handlePublish={handlePublish} />
 
                     </Stack>
                 </Paper>
             </ClickAwayListener>
-        </Dialog>   
+        </Dialog>
     );
 }
 

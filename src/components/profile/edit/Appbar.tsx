@@ -8,16 +8,17 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
 
 interface AppbarProps {
-    handleClose : () => void;
-    handleSave : () => void;
+    handleClose: () => void;
+    handleSave: () => void;
 }
 
 const Appbar: React.FC<AppbarProps> = ({ handleClose, handleSave }) => {
 
     const { isProcessing: processing } = UseProfileStore();
-    
+
     return (
         <AppBar position="sticky" color="inherit">
             <Toolbar sx={{ display: "flex" }}>
@@ -27,8 +28,8 @@ const Appbar: React.FC<AppbarProps> = ({ handleClose, handleSave }) => {
                 <Typography variant="body1" sx={{ ml: 3 }}>
                     プロフィール編集
                 </Typography>
-                <LoadingButton loading={processing} variant="contained" sx={{ m: 1, ml: "auto", p: 2, py: 1, alignSelf: "flex-end" }} onClick={handleSave}>
-                    Save
+                <LoadingButton loading={processing} variant="contained" sx={{ m: 1, ml: "auto", p: 2, py: 1, alignSelf: "flex-end" }} onClick={handleSave} startIcon={<SaveIcon />}>
+                    保存
                 </LoadingButton>
             </Toolbar>
         </AppBar>

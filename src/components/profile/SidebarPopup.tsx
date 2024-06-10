@@ -23,41 +23,41 @@ const SidebarPopup: React.FC = () => {
     return (
         <BasePopup open={isProfileSettingsOpen} anchor={profileSettingsAnchor} placement='top-end'>
             <ClickAwayListener onClickAway={closeProfileSettings}>
-                    {isSignedIn ? 
-                        // Signed in
-                        <Paper elevation={2} sx={{ p:2 }}>
-                            <Stack>
-                                <Stack direction="row">
-                                    <Avatar>
+                {isSignedIn ?
+                    // Signed in
+                    <Paper elevation={2} sx={{ p: 2, zIndex: 1400 }}>
+                        <Stack>
+                            <Stack direction="row">
+                                <Avatar>
                                     <img src={photoURL} alt={username} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                    </Avatar>
-                                    <Stack sx={{ ml: 1 }}>
-                                        <Typography variant="body2">
-                                            {username}
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            {email}
-                                        </Typography>
-                                    </Stack>
+                                </Avatar>
+                                <Stack sx={{ ml: 1 }}>
+                                    <Typography variant="body2">
+                                        {username}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {email}
+                                    </Typography>
                                 </Stack>
-                                <Container sx={{ ml: 1.5 }}>
-                                    <LoadingButton loading={isProcessing} variant="outlined" onClick={openEditProfile} sx={{ m: 1 }}>
-                                        Edit
-                                    </LoadingButton>
-                                    <Button variant="outlined" onClick={signOut} sx={{ m: 1 }}>
-                                        Sign Out
-                                    </Button>
-                                </Container>
                             </Stack>
-                        </Paper>
-                        :
-                        // Signed out
-                        <Paper elevation={2} sx={{ p: 2 }}>
-                            <Button onClick={signInWithGoogle}>
-                                Sign In
-                            </Button>
-                        </Paper>
-                    }
+                            <Container sx={{ ml: 1.5 }}>
+                                <LoadingButton loading={isProcessing} variant="outlined" onClick={openEditProfile} sx={{ m: 1 }}>
+                                    編集
+                                </LoadingButton>
+                                <Button variant="outlined" onClick={signOut} sx={{ m: 1 }}>
+                                    ログアウト
+                                </Button>
+                            </Container>
+                        </Stack>
+                    </Paper>
+                    :
+                    // Signed out
+                    <Paper elevation={2} sx={{ p: 2, zIndex: 1400 }}>
+                        <Button onClick={signInWithGoogle}>
+                            ログイン
+                        </Button>
+                    </Paper>
+                }
             </ClickAwayListener>
         </BasePopup>
     );
