@@ -56,7 +56,7 @@ export default function App() {
   const { sendWS } = wsCtx;
 
   const { currentContent, openNewTweet, isSnackOpen, snackMessage, snackSeverity: snakcSeverity, openSnack, closeSnack } = UseAppStore();
-  const { signIn, setIsLoadingProfile, setFollowingUsers, setBookmarkedTweets, setLikedTweets } = UseUserStore();
+  const { signIn, setIsLoadingProfile, setFollowingUsers, setBookmarkedTweets, setLikedTweets, isSignedIn } = UseUserStore();
   const { setLinkUid } = UsePostStore();
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -203,7 +203,14 @@ export default function App() {
             {/* Desktop */}
             <div className='sidebar'>
               {/* New Tweet Button */}
-              <Fab color="primary" sx={{ alignSelf: "flex-end" }} onClick={() => { setLinkUid(''), openNewTweet(); }}>
+              <Fab color="primary" sx={{ alignSelf: "flex-end" }} onClick={() => {
+                if (!isSignedIn) {
+                  openSnack("ログインしてください", "warning");
+                  return;
+                }
+                setLinkUid('');
+                openNewTweet();
+              }}>
                 <EditIcon />
               </Fab>
             </div>
@@ -212,7 +219,14 @@ export default function App() {
           <>
             {/* Mobile */}
             {scrollDirection !== 'down' &&
-              <Fab color="primary" style={{ position: 'fixed', bottom: 16, right: 16 }} onClick={() => { setLinkUid(''), openNewTweet(); }}>
+              <Fab color="primary" style={{ position: 'fixed', bottom: 16, right: 16 }} onClick={() => {
+                if (!isSignedIn) {
+                  openSnack("ログインしてください", "warning");
+                  return;
+                }
+                setLinkUid('');
+                openNewTweet();
+              }}>
                 <EditIcon />
               </Fab>
             }

@@ -30,14 +30,14 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
     }
     const { sendWS } = wsCtx;
 
-    const { uid } = UseUserStore();
+    const { uid, isSignedIn } = UseUserStore();
 
     const [isShowingPost, setIsShowingPost] = useState(false);
     // const [isTransitionComplete, setIsTransitionComplete] = useState(false);
     // const [verticalMargin, setVerticalMargin] = useState(0.0);
     // const [isVisible, setIsVisible] = useState(true);
     const { setLinkUid } = UsePostStore();
-    const { openNewTweet, openEditTweet } = UseAppStore();
+    const { openNewTweet, openEditTweet, openSnack } = UseAppStore();
     const [backLinkedTweets, setBackLinkedTweets] = useState<TweetInterface[]>([]);
     const [frontLinkedTweets, setFrontLinkedTweets] = useState<TweetInterface[]>([]);
 
@@ -195,7 +195,13 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
                                 }
                                 <Stack width="50%">
                                     <Box onClick={(event) => event.stopPropagation()}>
-                                        <Button variant="outlined" color="primary" sx={{ m: 1 }} onClick={() => { setLinkUid(tweet.uid); openNewTweet() }}>+ リンクして新規投稿</Button>
+                                        <Button variant="outlined" color="primary" sx={{ m: 1 }} onClick={() => {
+                                            if (!isSignedIn) {
+                                                openSnack("ログインしてください", "warning");
+                                                return;
+                                            }
+                                            setLinkUid(tweet.uid); openNewTweet()
+                                        }}>+ リンクして新規投稿</Button>
                                     </Box>
                                     {
                                         frontLinkedTweets.length > 0 &&

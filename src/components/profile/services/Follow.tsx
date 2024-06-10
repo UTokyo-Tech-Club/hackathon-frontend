@@ -9,6 +9,7 @@ import UseAppStore from '../../../stores/App';
 
 // MUI
 import LoadingButton from '@mui/lab/LoadingButton';
+import Box from '@mui/material/Box';
 
 const FollowButton: React.FC<{ userToFollowUID: string }> = ({ userToFollowUID }) => {
 
@@ -31,10 +32,10 @@ const FollowButton: React.FC<{ userToFollowUID: string }> = ({ userToFollowUID }
         }
 
         setIsProcessingFollow(true);
-        sendWS<{ error: string }>({ 
-            type: "user", 
+        sendWS<{ error: string }>({
+            type: "user",
             action: "follow",
-            data: { 
+            data: {
                 userToFollowUID: userToFollowUID
             }
         })
@@ -55,12 +56,12 @@ const FollowButton: React.FC<{ userToFollowUID: string }> = ({ userToFollowUID }
             openSnack("ログインしてください", "warning");
             return;
         }
-        
+
         setIsProcessingFollow(true);
-        sendWS<{ error: string }>({ 
-            type: "user", 
+        sendWS<{ error: string }>({
+            type: "user",
             action: "unfollow",
-            data: { 
+            data: {
                 userToUnfollowUID: userToFollowUID
             }
         })
@@ -78,15 +79,17 @@ const FollowButton: React.FC<{ userToFollowUID: string }> = ({ userToFollowUID }
 
     return (
         <>
-        {isFollowing ? 
-            <LoadingButton loading={isProcessingFollow} variant="outlined" onClick={handleUnfollow}>
-                Unfollow
-            </LoadingButton>
-            :
-            <LoadingButton loading={isProcessingFollow} variant="contained" onClick={handleFollow}>
-                Follow
-            </LoadingButton>
-        }
+            <Box onClick={(event) => event.stopPropagation()}>
+                {isFollowing ?
+                    <LoadingButton loading={isProcessingFollow} variant="outlined" onClick={handleUnfollow}>
+                        フォロー中
+                    </LoadingButton>
+                    :
+                    <LoadingButton loading={isProcessingFollow} variant="contained" onClick={handleFollow}>
+                        フォロー
+                    </LoadingButton>
+                }
+            </Box>
         </>
     );
 }
