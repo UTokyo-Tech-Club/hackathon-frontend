@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { TweetInterface } from '../interfaces/Tweet';
 
 type Tweet = {
     content: string;
@@ -12,7 +11,7 @@ type Tweet = {
 
 }
 
-const UseTweetStore = create<Tweet>((set, get) => ({
+const UseTweetStore = create<Tweet>((set) => ({
     content: '',
     isProcessing: false,
     tweetUID: '',

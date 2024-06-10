@@ -33,9 +33,9 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
     const { uid } = UseUserStore();
 
     const [isShowingPost, setIsShowingPost] = useState(false);
-    const [isTransitionComplete, setIsTransitionComplete] = useState(false);
-    const [verticalMargin, setVerticalMargin] = useState(0.0);
-    const [isVisible, setIsVisible] = useState(true);
+    // const [isTransitionComplete, setIsTransitionComplete] = useState(false);
+    // const [verticalMargin, setVerticalMargin] = useState(0.0);
+    // const [isVisible, setIsVisible] = useState(true);
     const { setLinkUid } = UsePostStore();
     const { openNewTweet, openEditTweet } = UseAppStore();
     const [backLinkedTweets, setBackLinkedTweets] = useState<TweetInterface[]>([]);
@@ -56,29 +56,29 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
         openEditTweet();
     }
 
-    useEffect(() => {
-        const animateMargin = (showing: boolean) => {
-            let start = Date.now();
-            let timer = setInterval(() => {
-                let timePassed = Date.now() - start;
-                let progress = timePassed / 300;
-                if (progress > 1) progress = 1;
+    // useEffect(() => {
+    // const animateMargin = (showing: boolean) => {
+    //     let start = Date.now();
+    //     let timer = setInterval(() => {
+    //         let timePassed = Date.now() - start;
+    //         let progress = timePassed / 300;
+    //         if (progress > 1) progress = 1;
 
-                // ease in-out effect
-                let easeInOutProgress = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
+    //         // ease in-out effect
+    //         let easeInOutProgress = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
 
-                setVerticalMargin(showing ? easeInOutProgress * 20 : (1 - easeInOutProgress) * 20);
+    //         setVerticalMargin(showing ? easeInOutProgress * 20 : (1 - easeInOutProgress) * 20);
 
-                if (progress === 1) {
-                    setIsTransitionComplete(true);
-                    clearInterval(timer);
-                };
-            }, 20);
-        };
+    //         if (progress === 1) {
+    //             setIsTransitionComplete(true);
+    //             clearInterval(timer);
+    //         };
+    //     }, 20);
+    // };
 
-        setIsTransitionComplete(false);
-        animateMargin(isShowingPost);
-    }, [isShowingPost])
+    // setIsTransitionComplete(false);
+    // animateMargin(isShowingPost);
+    // }, [isShowingPost])
 
     useEffect(() => {
         if (tweetData.uid === lastUpdatedUID) {
@@ -101,7 +101,26 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
                 const frontLinkedTweets = await getLinkedTweets(sendWS, tweetData.linksFront);
                 setFrontLinkedTweets(frontLinkedTweets);
             }
+
         };
+
+        // const fetchAllBackLinkedTweetsSimultaneously = async () => {
+        //     const startTime = performance.now();
+        //     const fetchPromises = [];
+        //     if (tweetData.linksBack) {
+        //         for (let i = 0; i < 1000; i++) {
+        //             fetchPromises.push(getLinkedTweets(sendWS, tweetData.linksBack));
+        //             console.log(i);
+        //         }
+        //     }
+        //     const allBackLinkedTweets = await Promise.all(fetchPromises);
+        //     // Assuming we need to handle the results collectively
+        //     const combinedBackLinkedTweets = allBackLinkedTweets.flat();
+        //     console.log(combinedBackLinkedTweets);
+        //     const endTime = performance.now();
+        //     console.log(`Fetching all back linked tweets took ${endTime - startTime} milliseconds.`);
+        // };
+        // fetchAllBackLinkedTweetsSimultaneously();
 
         fetchLinkedTweets();
     }, []);

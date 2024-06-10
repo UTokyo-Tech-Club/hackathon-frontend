@@ -37,7 +37,7 @@ type FeedStore = {
     // removeTweetsToUpdate: (tweetUID: string) => void;
 }
 
-const UseFeedStore = create<FeedStore>((set, get) => ({
+const UseFeedStore = create<FeedStore>((set) => ({
     tweets: [],
     lastTweetAddMethod: "back",
     tweetMapInstance: new Map(),
