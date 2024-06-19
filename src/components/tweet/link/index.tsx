@@ -28,12 +28,12 @@ const Link: React.FC<{ prev: boolean, tweet?: TweetInterface }> = ({ prev, tweet
             <Box sx={{ gridArea: 'linkDirection', display: 'flex', justifyContent: 'center' }}>
                 {prev ? <KeyboardDoubleArrowUpIcon /> : <KeyboardDoubleArrowDownIcon />}
             </Box>
-            <Box sx={{ gridArea: 'linkText', display: 'flex', justifyContent: 'flex-start', my: 1 }}>
+            {/* <Box sx={{ gridArea: 'linkText', display: 'flex', justifyContent: 'flex-start', my: 1 }}>
                 <Typography variant="body2">Link Text ...</Typography>
-            </Box>
-            <Box sx={{ gridArea: 'divider' }}>
+            </Box> */}
+            {/* <Box sx={{ gridArea: 'divider' }}>
                 <Divider variant="fullWidth" />
-            </Box>
+            </Box> */}
             <Box sx={{ gridArea: 'profileIcon', display: 'flex', justifyContent: 'center' }}>
                 <Avatar sx={{ width: 32, height: 32, mt: 1 }} src={tweet?.ownerPhotoURL} alt={tweet?.ownerUsername} />
             </Box>
