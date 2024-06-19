@@ -5,7 +5,6 @@ import Content from './Content';
 import Typography from '@mui/material/Typography';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 
