@@ -3,40 +3,45 @@ import BookmarkButton from '../profile/services/Bookmark';
 import LikeButton from '../profile/services/Like';
 
 // MUI
-import AddCommentIcon from '@mui/icons-material/AddComment';
+import CommentIcon from '@mui/icons-material/Comment';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Stack from '@mui/material/Stack';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Typography from '@mui/material/Typography';
+import { TweetInterface } from '../../interfaces/Tweet';
 
-const Metadata: React.FC<{ tweetUID: string }> = ({ tweetUID }) => {
+const Metadata: React.FC<{ tweet: TweetInterface, onAction: (action: string) => void }> = ({ tweet, onAction }) => {
+
+    const handleButtonClick = (action: string) => {
+        onAction(action);
+    };
 
     return (
         <Stack>
-            <BookmarkButton tweetUID={tweetUID} />
+            <BookmarkButton tweetUID={tweet.uid} />
 
             <Stack height="100%" justifyContent="space-around">
-                <LikeButton tweetUID={tweetUID} />
+                <LikeButton tweetUID={tweet.uid} />
 
-                <LoadingButton>
+                <LoadingButton onClick={() => handleButtonClick('comment')}>
                     <Stack>
-                        <AddCommentIcon />
-                        <Typography variant="body2">4</Typography>
+                        <CommentIcon />
+                        <Typography variant="body2">{tweet.comments ? tweet.comments.length : 0}</Typography>
                     </Stack>
                 </LoadingButton>
 
-                <LoadingButton>
+                <LoadingButton onClick={() => handleButtonClick('link')}>
                     <Stack>
                         <ImportExportIcon />
-                        <Typography variant="body2">4</Typography>
+                        <Typography variant="body2">-</Typography>
                     </Stack>
                 </LoadingButton>
 
-                <LoadingButton>
+                <LoadingButton onClick={() => handleButtonClick('views')}>
                     <Stack>
                         <VisibilityIcon />
-                        <Typography variant="body2">4</Typography>
+                        <Typography variant="body2">-</Typography>
                     </Stack>
                 </LoadingButton>
             </Stack>

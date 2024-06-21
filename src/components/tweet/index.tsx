@@ -22,6 +22,7 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Button from '@mui/material/Button';
 import UsePostStore from '../../stores/Post';
+import Comments from './comment';
 
 const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
     const wsCtx = useContext(WebSocketContext);
@@ -33,6 +34,7 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
     const { uid, isSignedIn } = UseUserStore();
 
     const [isShowingPost, setIsShowingPost] = useState(false);
+    const [isShowingComment, setIsShowingComment] = useState(false);
     // const [isTransitionComplete, setIsTransitionComplete] = useState(false);
     // const [verticalMargin, setVerticalMargin] = useState(0.0);
     // const [isVisible, setIsVisible] = useState(true);
@@ -137,9 +139,21 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
     //     }
     // }, [frontLinks, backLinks, tweetsToUpdate]);
 
+    const handleMetadataAction = (action: string) => {
+        if (action == 'comment') {
+            setIsShowingPost(false);
+            setIsShowingComment(!isShowingComment);
+        }
+
+        if (action == 'link') {
+            setIsShowingPost(true);
+            setIsShowingComment(false);
+        }
+    };
+
     return (
         <>
-            <Paper elevation={1} sx={{ my: 2 }} onClick={() => { setIsShowingPost(!isShowingPost) }}>
+            <Paper elevation={1} sx={{ my: 2 }} onClick={() => { setIsShowingPost(!isShowingPost), setIsShowingComment(false) }}>
                 <Stack>
                     {/* Main Content */}
                     <Stack direction="row">
@@ -174,9 +188,17 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
 
                         {/* Metadata */}
                         <Box onClick={(event) => event.stopPropagation()}>
-                            <Metadata tweetUID={tweetData.uid} />
+                            <Metadata tweet={tweet} onAction={handleMetadataAction} />
                         </Box>
                     </Stack>
+
+                    {/* Comments */}
+                    {isShowingComment && !isShowingPost &&
+                        <>
+                            <Divider variant="fullWidth" />
+                            <Comments tweet={tweet} />
+                        </>
+                    }
 
                     {/* Links */}
                     <Divider variant="fullWidth" />
@@ -212,7 +234,7 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
                             </>
                         }
 
-                        {!isShowingPost &&
+                        {!isShowingPost && !isShowingComment &&
                             <>
                                 {backLinkedTweets.length > 0 && backLinkedTweets[0].content &&
                                     <Link prev={true} tweet={backLinkedTweets[0]} />
@@ -227,7 +249,6 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
                         }
 
                     </Stack>
-
                 </Stack>
             </Paper>
             {/* <Box sx={{ my: verticalMargin }} /> */}

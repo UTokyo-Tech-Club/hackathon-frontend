@@ -45,6 +45,10 @@ const Feed = () => {
                 numComments: number,
                 numLinks: number,
                 numViews: number,
+
+                comments: string[],
+                commentingUserUsernames: string[],
+                commentingUserIconUrls: string[],
             }
         }>({
             type: "tweet",
@@ -73,6 +77,10 @@ const Feed = () => {
                     updatedAt: new Date(),
                     content: JSON.stringify(r.data.content),
                     links: [],
+
+                    comments: r.data.comments ? r.data.comments : [],
+                    commentingUserUsernames: r.data.commentingUserUsernames ? r.data.commentingUserUsernames : [],
+                    commentingUserIconUrls: r.data.commentingUserIconUrls ? r.data.commentingUserIconUrls : [],
                 }
 
                 addTweet(tweetData);

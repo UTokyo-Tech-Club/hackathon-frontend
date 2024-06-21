@@ -16,6 +16,10 @@ interface TweetInterface {
     links?: string[];
     linksBack?: string[];
     linksFront?: string[];
+
+    comments?: string[];
+    commentingUserUsernames?: string[];
+    commentingUserIconUrls?: string[];
 }
 
 export type { TweetInterface }
