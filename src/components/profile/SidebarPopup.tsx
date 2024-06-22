@@ -1,7 +1,7 @@
 import UseUserStore from '../../stores/User';
 import UseAppStore from '../../stores/App';
 import UseProfileStore from '../../stores/Profile';
-import { signInAnonymously, signInWithGoogle } from '../../firebase/auth';
+import { signInWithGoogle } from '../../firebase/auth';
 
 // MUI
 import Avatar from '@mui/material/Avatar';

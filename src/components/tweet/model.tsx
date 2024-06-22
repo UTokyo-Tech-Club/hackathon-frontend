@@ -36,6 +36,7 @@ export const getLinkedTweets = async (sendWS: <T>(message: { [key: string]: any 
                 tweets.push({
                     uid: response.data.uid,
                     ownerUID: response.data.ownerUID,
+                    imageUrl: response.data.ownerPhotoURL,
                     ownerUsername: response.data.ownerUsername,
                     ownerPhotoURL: response.data.ownerPhotoURL,
                     content: JSON.stringify(response.data.content),
