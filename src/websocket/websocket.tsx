@@ -40,6 +40,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
                     ownerUID: msg["data"]["ownerUID"],
                     ownerUsername: msg["data"]["ownerUsername"],
                     ownerPhotoURL: msg["data"]["ownerPhotoURL"],
+                    imageUrl: msg["data"]["imageUrl"],
                     numLikes: 0,
                     numComments: 0,
                     numLinks: 0,

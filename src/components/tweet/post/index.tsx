@@ -7,6 +7,7 @@ import log from 'loglevel';
 import UseUserStore from '../../../stores/User';
 import Header from './Header';
 import Footer from './Footer';
+import useTweetStore from '../../../stores/Tweet';
 
 // MUI
 import Dialog from '@mui/material/Dialog';
@@ -15,6 +16,7 @@ import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Paper from '@mui/material/Paper';
+import UploadWidget from '../../uploadWidget';
 
 const Post: React.FC = () => {
     const wsCtx = useContext(WebSocketContext);
@@ -31,10 +33,17 @@ const Post: React.FC = () => {
 
     const { content, linkUid, setIsProcessing } = UsePostStore();
 
+    const { imageUrl, setImageUrl } = useTweetStore();
+
+
     useEffect(() => {
         if (!content) return;
         setIsContentValid(JSON.parse(content)['blocks'].length > 0);
     }, [content]);
+
+    useEffect(() => {
+        setImageUrl('');
+    }, []);
 
     const handlePublish = () => {
         setIsProcessing(true);
@@ -45,6 +54,7 @@ const Post: React.FC = () => {
             data: {
                 content: content,
                 link: linkUid,
+                imageUrl: imageUrl,
             }
         })
             .then((r) => {
@@ -75,6 +85,7 @@ const Post: React.FC = () => {
 
                     {/* Post Tweet */}
                     <Stack>
+                        <UploadWidget />
                         <Stack direction='row' sx={{ m: 1, p: 1, minHeight: "40vh" }}>
                             <Avatar sx={{ width: 32, height: 32, m: 1, mr: 2 }}>
                                 <img src={photoURL} alt={username} style={{ width: "100%", height: "100%", objectFit: "cover" }} />

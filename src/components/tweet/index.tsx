@@ -24,6 +24,11 @@ import Button from '@mui/material/Button';
 import UsePostStore from '../../stores/Post';
 import Comments from './comment';
 
+import { Cloudinary } from '@cloudinary/url-gen';
+import { auto } from '@cloudinary/url-gen/actions/resize';
+import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
+import { AdvancedImage } from '@cloudinary/react';
+
 const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
     const wsCtx = useContext(WebSocketContext);
     if (!wsCtx) {
@@ -35,9 +40,6 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
 
     const [isShowingPost, setIsShowingPost] = useState(false);
     const [isShowingComment, setIsShowingComment] = useState(false);
-    // const [isTransitionComplete, setIsTransitionComplete] = useState(false);
-    // const [verticalMargin, setVerticalMargin] = useState(0.0);
-    // const [isVisible, setIsVisible] = useState(true);
     const { setLinkUid } = UsePostStore();
     const { openNewTweet, openEditTweet, openSnack } = UseAppStore();
     const [backLinkedTweets, setBackLinkedTweets] = useState<TweetInterface[]>([]);
@@ -46,7 +48,6 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
     const { tweets, tweetMapInstance, lastUpdatedUID } = UseFeedStore();
 
     const { setContent, setTweetUID } = UseTweetStore();
-    // const { setBackLinkedTweets, setFrontLinkedTweets, getFrontLinks, getBackLinks, frontLinks, backLinks } = UseFeedStore();
 
     var tweet = tweets.filter((t) => t.uid === tweetData.uid)[0];
 
@@ -58,29 +59,6 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
         openEditTweet();
     }
 
-    // useEffect(() => {
-    // const animateMargin = (showing: boolean) => {
-    //     let start = Date.now();
-    //     let timer = setInterval(() => {
-    //         let timePassed = Date.now() - start;
-    //         let progress = timePassed / 300;
-    //         if (progress > 1) progress = 1;
-
-    //         // ease in-out effect
-    //         let easeInOutProgress = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
-
-    //         setVerticalMargin(showing ? easeInOutProgress * 20 : (1 - easeInOutProgress) * 20);
-
-    //         if (progress === 1) {
-    //             setIsTransitionComplete(true);
-    //             clearInterval(timer);
-    //         };
-    //     }, 20);
-    // };
-
-    // setIsTransitionComplete(false);
-    // animateMargin(isShowingPost);
-    // }, [isShowingPost])
 
     useEffect(() => {
         if (tweetData.uid === lastUpdatedUID) {
@@ -106,38 +84,10 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
 
         };
 
-        // const fetchAllBackLinkedTweetsSimultaneously = async () => {
-        //     const startTime = performance.now();
-        //     const fetchPromises = [];
-        //     if (tweetData.linksBack) {
-        //         for (let i = 0; i < 1000; i++) {
-        //             fetchPromises.push(getLinkedTweets(sendWS, tweetData.linksBack));
-        //             console.log(i);
-        //         }
-        //     }
-        //     const allBackLinkedTweets = await Promise.all(fetchPromises);
-        //     // Assuming we need to handle the results collectively
-        //     const combinedBackLinkedTweets = allBackLinkedTweets.flat();
-        //     console.log(combinedBackLinkedTweets);
-        //     const endTime = performance.now();
-        //     console.log(`Fetching all back linked tweets took ${endTime - startTime} milliseconds.`);
-        // };
-        // fetchAllBackLinkedTweetsSimultaneously();
 
         fetchLinkedTweets();
     }, []);
 
-    // useEffect(() => {
-    //     console.log("1111111111111111111111111", tweetsToUpdate)
-    //     if (tweetsToUpdate.includes(tweet.uid)) {
-    //         console.log("uuuuuuuuuuuuuuuuuuupdating");
-    //         setIsVisible(false);
-    //         setTimeout(() => {
-    //             setIsVisible(true);
-    //             removeTweetsToUpdate(tweet.uid);
-    //         }, 10);
-    //     }
-    // }, [frontLinks, backLinks, tweetsToUpdate]);
 
     const handleMetadataAction = (action: string) => {
         if (action == 'comment') {
@@ -151,6 +101,26 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
         }
     };
 
+    const cld = new Cloudinary({ cloud: { cloudName: 'dnkyjj2ij' } });
+    var img;
+
+    // Use this sample image or upload your own via the Media Explorer
+    try {
+
+        const url = tweet.imageUrl;
+        const parts = url.split('/');
+        const filename = parts[parts.length - 1];
+        const extractedPart = filename.split('.')[0];
+
+        img = cld
+            .image(extractedPart)
+            .format('auto') // Optimize delivery by resizing and applying auto-format and auto-quality
+            .quality('auto')
+            .resize(auto().gravity(autoGravity()).width(500).height(500)); // Transform the image: auto-crop to square aspect_ratio
+    } catch (error) {
+        console.log(error);
+    }
+
     return (
         <>
             <Paper elevation={1} sx={{ my: 2 }} onClick={() => { setIsShowingPost(!isShowingPost), setIsShowingComment(false) }}>
@@ -160,6 +130,7 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
 
                         {/* Profile */}
                         <Avatar sx={{ width: 40, height: 40, m: 2 }} src={tweet.ownerPhotoURL} alt={tweet.ownerUsername} />
+
 
                         {/* Content */}
                         <Stack width="100%">
@@ -179,6 +150,10 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
                                     }
                                 </Box>
                             </Stack>
+
+
+                            {tweet.imageUrl !== '' && img && <AdvancedImage cldImg={img} width="250px" height="250px" />}
+
 
                             {/* Editor.js */}
                             <Box>

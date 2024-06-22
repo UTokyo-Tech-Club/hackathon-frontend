@@ -1,5 +1,6 @@
 import { signInWithPopup, signOut } from "firebase/auth";
 import { authApp, googleProvider } from './config'
+import { signInAnonymously as firebaseSignInAnonymously } from "firebase/auth";
 import log from "loglevel";
 
 const getToken = async () => {
@@ -30,4 +31,11 @@ const signOutUser = () => {
 const signInWithGoogle = () => signInWithPopup(authApp, googleProvider)
 
 
-export { getToken, signInWithGoogle, signOutUser };
+const signInAnonymously = () => {
+    firebaseSignInAnonymously(authApp).catch((error: any) => {
+        alert(error.message);
+    });
+};
+
+
+export { getToken, signInWithGoogle, signOutUser, signInAnonymously };

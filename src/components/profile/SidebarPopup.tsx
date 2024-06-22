@@ -1,7 +1,7 @@
 import UseUserStore from '../../stores/User';
 import UseAppStore from '../../stores/App';
 import UseProfileStore from '../../stores/Profile';
-import { signInWithGoogle } from '../../firebase/auth';
+import { signInAnonymously, signInWithGoogle } from '../../firebase/auth';
 
 // MUI
 import Avatar from '@mui/material/Avatar';
@@ -53,9 +53,11 @@ const SidebarPopup: React.FC = () => {
                     :
                     // Signed out
                     <Paper elevation={2} sx={{ p: 2, zIndex: 1400 }}>
-                        <Button onClick={signInWithGoogle}>
-                            ログイン
-                        </Button>
+                        <Stack direction="column">
+                            <Button onClick={signInWithGoogle}>
+                                ログイン・新規登録
+                            </Button>
+                        </Stack>
                     </Paper>
                 }
             </ClickAwayListener>

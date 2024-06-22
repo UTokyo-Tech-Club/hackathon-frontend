@@ -36,6 +36,7 @@ const Feed = () => {
                 ownerUsername: string,
                 ownerPhotoURL: string,
                 content: object,
+                imageUrl: string,
                 linksBack: string[],
                 linksFront: string[],
                 createdAt: string,
@@ -77,6 +78,7 @@ const Feed = () => {
                     updatedAt: new Date(),
                     content: JSON.stringify(r.data.content),
                     links: [],
+                    imageUrl: r.data.imageUrl ? r.data.imageUrl : "",
 
                     comments: r.data.comments ? r.data.comments : [],
                     commentingUserUsernames: r.data.commentingUserUsernames ? r.data.commentingUserUsernames : [],

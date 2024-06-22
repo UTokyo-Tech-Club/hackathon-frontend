@@ -3,6 +3,7 @@ interface TweetInterface {
     ownerUID: string;
     ownerUsername: string;
     ownerPhotoURL: string;
+    imageUrl: string;
 
     numLikes?: number;
     numComments?: number;
