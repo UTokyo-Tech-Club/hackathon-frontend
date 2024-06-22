@@ -207,9 +207,11 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
                         {isShowingPost &&
                             <>
                                 {backLinkedTweets.length > 0 &&
-                                    <Stack width="50%">
-                                        <Link prev={true} tweet={backLinkedTweets[0]} />
-                                    </Stack>
+                                    backLinkedTweets.map((linkedTweet: any) => (
+                                        <Stack width="50%" key={linkedTweet.uid}>
+                                            <Link prev={true} tweet={linkedTweet} />
+                                        </Stack>
+                                    ))
                                 }
                                 {
                                     backLinkedTweets.length > 0 && frontLinkedTweets.length > 0 &&

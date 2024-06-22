@@ -17,6 +17,9 @@ const Metadata: React.FC<{ tweet: TweetInterface, onAction: (action: string) => 
         onAction(action);
     };
 
+    const linkCountBack = tweet.linksBack ? tweet.linksBack.length : 0;
+    const linkCountFront = tweet.linksFront ? tweet.linksFront.length : 0;
+
     return (
         <Stack>
             <BookmarkButton tweetUID={tweet.uid} />
@@ -34,7 +37,7 @@ const Metadata: React.FC<{ tweet: TweetInterface, onAction: (action: string) => 
                 <LoadingButton onClick={() => handleButtonClick('link')}>
                     <Stack>
                         <ImportExportIcon />
-                        <Typography variant="body2">-</Typography>
+                        <Typography variant="body2">{linkCountBack + linkCountFront}</Typography>
                     </Stack>
                 </LoadingButton>
 

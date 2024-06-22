@@ -12,15 +12,17 @@ import { WebSocketContext } from './websocket/websocket';
 import Copyright from "./components/decorations/copyright";
 import GradientBackground from "./components/decorations/background/GradientBackground";
 import EditTweet from "./components/tweet/edit";
+import CloseIcon from '@mui/icons-material/Close';
 
 // MUI
 import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
-import { Stack } from "@mui/material";
+import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import UsePostStore from "./stores/Post";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const useScrollDirection = () => {
   const [scrollDirection, setScrollDirection] = useState('up');
@@ -60,6 +62,7 @@ export default function App() {
   const { setLinkUid } = UsePostStore();
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   const scrollDirection = useScrollDirection();
 
@@ -172,6 +175,19 @@ export default function App() {
 
   return (
     <GradientBackground>
+      {isBannerOpen &&
+        <Box sx={{ width: '100%', bgcolor: 'primary.main', p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Button variant="outlined" style={{ color: 'white', borderColor: 'white' }} onClick={() => window.open('https://hackathon-web-eight.vercel.app/', '_blank')}>
+            <IconButton onClick={() => window.open('https://hackathon-web-eight.vercel.app/', '_blank')} color="inherit">
+              <ArrowBackIcon style={{ color: 'white' }} />
+            </IconButton>
+            <Typography variant="h6">LPへ戻る</Typography>
+          </Button>
+          <IconButton onClick={() => setIsBannerOpen(false)} color="inherit">
+            <CloseIcon style={{ color: 'white' }} />
+          </IconButton>
+        </Box>
+      }
       <Stack direction="row" justifyContent="center">
         {/* Sidebar */}
         {isSidebarVisible ?
