@@ -31,6 +31,7 @@ export const getLinkedTweets = async (sendWS: <T>(message: { [key: string]: any 
             })
         ));
 
+
         responses.forEach(response => {
             if (response.error == "null") {
                 tweets.push({
