@@ -47,7 +47,7 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
 
     const { tweets, tweetMapInstance, lastUpdatedUID } = UseFeedStore();
 
-    const { setContent, setTweetUID } = UseTweetStore();
+    const { setContent, setTweetUID, setImageUrl } = UseTweetStore();
 
     var tweet = tweets.filter((t) => t.uid === tweetData.uid)[0];
 
@@ -199,7 +199,9 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
                                                 openSnack("ログインしてください", "warning");
                                                 return;
                                             }
-                                            setLinkUid(tweet.uid); openNewTweet()
+                                            setImageUrl("");
+                                            setLinkUid(tweet.uid);
+                                            openNewTweet();
                                         }}>+ リンクして新規投稿</Button>
                                     </Box>
                                     {
