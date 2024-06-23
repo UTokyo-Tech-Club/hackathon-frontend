@@ -59,7 +59,7 @@ export default function App() {
 
   const { currentContent, openNewTweet, isSnackOpen, snackMessage, snackSeverity: snakcSeverity, openSnack, closeSnack } = UseAppStore();
   const { signIn, setIsLoadingProfile, setFollowingUsers, setBookmarkedTweets, setLikedTweets, isSignedIn } = UseUserStore();
-  const { setLinkUid } = UsePostStore();
+  const { setLinkUid, setContent } = UsePostStore();
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isBannerOpen, setIsBannerOpen] = useState(true);
@@ -225,6 +225,7 @@ export default function App() {
                   return;
                 }
                 setLinkUid('');
+                setContent('');
                 openNewTweet();
               }}>
                 <EditIcon />
