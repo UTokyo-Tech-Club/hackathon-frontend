@@ -152,7 +152,8 @@ const Tweet: React.FC<{ tweetData: TweetInterface }> = ({ tweetData }) => {
                             </Stack>
 
 
-                            {tweet.imageUrl !== '' && img && <AdvancedImage cldImg={img} width="250px" height="250px" />}
+                            {tweet.imageUrl !== '' && img &&
+                                <AdvancedImage cldImg={img} width={window.innerWidth < 768 ? "150px" : "250px"} height={window.innerWidth < 768 ? "150px" : "250px"} />}
 
 
                             {/* Editor.js */}
