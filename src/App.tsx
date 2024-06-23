@@ -176,7 +176,7 @@ export default function App() {
   return (
     <GradientBackground>
       {isBannerOpen &&
-        <Box sx={{ width: '100%', bgcolor: 'primary.main', p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ width: '100%', bgcolor: 'primary.main', p: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '70px' }}>
           <Button variant="outlined" style={{ color: 'white', borderColor: 'white' }} onClick={() => window.open('https://hackathon-web-eight.vercel.app/', '_blank')}>
             <IconButton onClick={() => window.open('https://hackathon-web-eight.vercel.app/', '_blank')} color="inherit">
               <ArrowBackIcon style={{ color: 'white' }} />
